@@ -73,8 +73,10 @@ export function buildSeed(): AdminDB {
   }));
 
   const products: AdminProduct[] = seedBooks.map((b, i) => {
-    const sale = b.originalPrice && b.originalPrice > b.price ? b.price : undefined;
-    const regular = b.originalPrice && b.originalPrice > b.price ? b.originalPrice : b.price;
+    const sale =
+      b.originalPrice && b.originalPrice > b.price ? b.price : undefined;
+    const regular =
+      b.originalPrice && b.originalPrice > b.price ? b.originalPrice : b.price;
     return {
       id: b.id,
       sku: skuFromIsbn(b.isbn),
@@ -120,7 +122,8 @@ export function buildSeed(): AdminDB {
       lengthCm: 21,
       widthCm: 14,
       heightCm: 2.4,
-      deliveryInfo: "Karachi next-day on orders before 2pm. Nationwide 2–5 working days.",
+      deliveryInfo:
+        "Karachi next-day on orders before 2pm. Nationwide 2–5 working days.",
       reviewsEnabled: true,
       showRating: true,
       rating: b.rating,
@@ -196,8 +199,18 @@ export function buildSeed(): AdminDB {
       customerId: "c-ayesha",
       createdAt: "2026-09-20T09:12:00.000Z",
       items: [
-        { productId: "peer-e-kamil", title: "Peer-e-Kamil", quantity: 1, price: 1290 },
-        { productId: "atomic-habits", title: "Atomic Habits", quantity: 1, price: 1490 },
+        {
+          productId: "peer-e-kamil",
+          title: "Peer-e-Kamil",
+          quantity: 1,
+          price: 1290,
+        },
+        {
+          productId: "atomic-habits",
+          title: "Atomic Habits",
+          quantity: 1,
+          price: 1490,
+        },
       ],
       subtotal: 2780,
       shipping: 0,
@@ -244,7 +257,12 @@ export function buildSeed(): AdminDB {
       customerId: "c-sana",
       createdAt: "2026-09-12T11:05:00.000Z",
       items: [
-        { productId: "the-alchemist", title: "The Alchemist", quantity: 2, price: 990 },
+        {
+          productId: "the-alchemist",
+          title: "The Alchemist",
+          quantity: 2,
+          price: 990,
+        },
       ],
       subtotal: 1980,
       shipping: 150,
@@ -267,7 +285,9 @@ export function buildSeed(): AdminDB {
       id: "SF-240501",
       customerId: "c-farah",
       createdAt: "2026-09-02T16:22:00.000Z",
-      items: [{ productId: "raja-gidh", title: "Raja Gidh", quantity: 1, price: 990 }],
+      items: [
+        { productId: "raja-gidh", title: "Raja Gidh", quantity: 1, price: 990 },
+      ],
       subtotal: 990,
       shipping: 350,
       discount: 0,
@@ -290,7 +310,12 @@ export function buildSeed(): AdminDB {
       customerId: "c-bilal",
       createdAt: "2026-08-22T10:00:00.000Z",
       items: [
-        { productId: "psychology-of-money", title: "The Psychology of Money", quantity: 1, price: 1290 },
+        {
+          productId: "psychology-of-money",
+          title: "The Psychology of Money",
+          quantity: 1,
+          price: 1290,
+        },
       ],
       subtotal: 1290,
       shipping: 350,
@@ -336,7 +361,14 @@ export function buildSeed(): AdminDB {
       id: "SF-239901",
       customerId: "c-ayesha",
       createdAt: "2026-07-15T13:00:00.000Z",
-      items: [{ productId: "jannat-ke-pattay", title: "Jannat Ke Pattay", quantity: 1, price: 1450 }],
+      items: [
+        {
+          productId: "jannat-ke-pattay",
+          title: "Jannat Ke Pattay",
+          quantity: 1,
+          price: 1450,
+        },
+      ],
       subtotal: 1450,
       shipping: 150,
       discount: 0,
@@ -356,7 +388,7 @@ export function buildSeed(): AdminDB {
     },
   ];
 
-  const reviews: AdminReview[] = seedReviews.map((r, i) => ({
+  const reviews: any[] = seedReviews.map((r, i) => ({
     ...r,
     customerId: customers[i % customers.length]?.id,
     status: i === 1 ? "pending" : "approved",
@@ -378,10 +410,30 @@ export function buildSeed(): AdminDB {
   }));
 
   const wishlist: WishlistEntry[] = [
-    { id: "w1", customerId: "c-ayesha", productId: "aab-e-hayat", createdAt: "2026-09-01T10:00:00.000Z" },
-    { id: "w2", customerId: "c-sana", productId: "atomic-habits", createdAt: "2026-09-08T10:00:00.000Z" },
-    { id: "w3", customerId: "c-hamza", productId: "bang-e-dara", createdAt: "2026-09-11T10:00:00.000Z" },
-    { id: "w4", customerId: "c-farah", productId: "nuskha-hae-wafa", createdAt: "2026-09-14T10:00:00.000Z" },
+    {
+      id: "w1",
+      customerId: "c-ayesha",
+      productId: "aab-e-hayat",
+      createdAt: "2026-09-01T10:00:00.000Z",
+    },
+    {
+      id: "w2",
+      customerId: "c-sana",
+      productId: "atomic-habits",
+      createdAt: "2026-09-08T10:00:00.000Z",
+    },
+    {
+      id: "w3",
+      customerId: "c-hamza",
+      productId: "bang-e-dara",
+      createdAt: "2026-09-11T10:00:00.000Z",
+    },
+    {
+      id: "w4",
+      customerId: "c-farah",
+      productId: "nuskha-hae-wafa",
+      createdAt: "2026-09-14T10:00:00.000Z",
+    },
   ];
 
   return {
