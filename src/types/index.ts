@@ -20,6 +20,7 @@ export type Author = {
   bio: string;
   location: string;
   bookCount: number;
+  image?: string;
   coverTone: string;
 };
 
@@ -46,6 +47,7 @@ export type Book = {
   featured?: boolean;
   bestseller?: boolean;
   newArrival?: boolean;
+  coverImage?: string;
   coverTone: string;
   accent: string;
 };

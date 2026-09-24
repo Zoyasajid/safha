@@ -2,16 +2,6 @@ import type { Author } from "@/types";
 
 export const authors: Author[] = [
   {
-    id: "umera-ahmed",
-    slug: "umera-ahmed",
-    name: "Umera Ahmed",
-    nameUrdu: "عمیرہ احمد",
-    bio: "One of Pakistan’s most widely read contemporary novelists, known for spiritually rich, character-driven Urdu fiction.",
-    location: "Pakistan",
-    bookCount: 4,
-    coverTone: "#3D2B1F",
-  },
-  {
     id: "bano-qudsia",
     slug: "bano-qudsia",
     name: "Bano Qudsia",
@@ -19,6 +9,7 @@ export const authors: Author[] = [
     bio: "A towering voice of Urdu literature whose novels explore faith, desire, and the moral life of society.",
     location: "Lahore",
     bookCount: 2,
+    image: "https://urdumom.com/wp-content/uploads/2017/02/img_4752.jpeg",
     coverTone: "#1F2A24",
   },
   {
@@ -29,18 +20,11 @@ export const authors: Author[] = [
     bio: "Playwright, novelist, and philosopher of everyday wisdom, beloved across generations in Pakistan.",
     location: "Lahore",
     bookCount: 2,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1XiNFAdt_cl1yCpAvN8IsPZtnzMhDNmGR-i5K0BYSpw&s=10",
     coverTone: "#4A3728",
   },
-  {
-    id: "nemrah-ahmed",
-    slug: "nemrah-ahmed",
-    name: "Nemrah Ahmed",
-    nameUrdu: "نمرہ احمد",
-    bio: "A bestselling Urdu novelist whose long-form stories blend mystery, emotion, and faith.",
-    location: "Pakistan",
-    bookCount: 2,
-    coverTone: "#2C241C",
-  },
+
   {
     id: "qasim-ali-shah",
     slug: "qasim-ali-shah",
@@ -48,6 +32,8 @@ export const authors: Author[] = [
     bio: "A Karachi-favourite motivational speaker and author on habits, learning, and personal growth.",
     location: "Karachi",
     bookCount: 2,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ0s5EMF5JRQTDVlwaE0jZEaCwxSIk0smrckVklbFodA&s",
     coverTone: "#2E2618",
   },
   {
@@ -57,6 +43,8 @@ export const authors: Author[] = [
     bio: "Author of Atomic Habits, focused on tiny changes that compound into remarkable results.",
     location: "United States",
     bookCount: 1,
+    image:
+      "https://www.nsb.com/wp-content/uploads/2020/02/James-Clear-Habits-Speaker.jpg",
     coverTone: "#1C2833",
   },
   {
@@ -66,6 +54,8 @@ export const authors: Author[] = [
     bio: "Brazilian novelist whose allegorical stories of destiny and courage are read worldwide.",
     location: "Brazil",
     bookCount: 1,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG0MnjRJ7v2Xw_qP2-p790iTozPQboNNuUCAcHeUZogA&s=10",
     coverTone: "#3B2F1C",
   },
   {
@@ -75,7 +65,21 @@ export const authors: Author[] = [
     bio: "Novelist of friendship, exile, and family, whose work resonates deeply with South Asian readers.",
     location: "Afghanistan / USA",
     bookCount: 2,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQClK1J1JKFCwYRMh84JuWf5EemRpJOt6-UalS0jhhMCg&s=10",
     coverTone: "#3A1F14",
+  },
+  {
+    id: "umera-ahmed",
+    slug: "umera-ahmed",
+    name: "Umera Ahmed",
+    nameUrdu: "عمیرہ احمد",
+    bio: "One of Pakistan’s most widely read contemporary novelists, known for spiritually rich, character-driven Urdu fiction.",
+    location: "Pakistan",
+    bookCount: 4,
+    image:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+    coverTone: "#3D2B1F",
   },
   {
     id: "morgan-housel",
@@ -130,6 +134,18 @@ export const authors: Author[] = [
     location: "Spain / Japan",
     bookCount: 1,
     coverTone: "#7A3A2A",
+  },
+  {
+    id: "nemrah-ahmed",
+    slug: "nemrah-ahmed",
+    name: "Nemrah Ahmed",
+    nameUrdu: "نمرہ احمد",
+    bio: "A bestselling Urdu novelist whose long-form stories blend mystery, emotion, and faith.",
+    location: "Pakistan",
+    bookCount: 2,
+    image:
+      "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80",
+    coverTone: "#2C241C",
   },
   {
     id: "robert-kiyosaki",

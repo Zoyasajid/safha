@@ -30,7 +30,11 @@ export function CatalogView({
 
   const filtered = useMemo(() => {
     const list = books.filter((b) => {
-      if (category !== "all" && !b.categorySlugs.includes(category as CategorySlug)) return false;
+      if (
+        category !== "all" &&
+        !b.categorySlugs.includes(category as CategorySlug)
+      )
+        return false;
       if (author !== "all" && b.authorId !== author) return false;
       if (language !== "all" && b.language !== language) return false;
       if (b.price > maxPrice) return false;
@@ -47,21 +51,33 @@ export function CatalogView({
       <div className="border-b border-line bg-white/40">
         <Container className="py-12 sm:py-16">
           {eyebrow ? (
-            <p className="text-[11px] uppercase tracking-[0.28em] text-gold">{eyebrow}</p>
+            <p className="text-[11px] uppercase tracking-[0.28em] text-gold">
+              {eyebrow}
+            </p>
           ) : null}
-          <h1 className="mt-2 font-serif text-4xl text-ink sm:text-5xl">{title}</h1>
+          <h1 className="mt-2 font-serif text-4xl text-ink sm:text-5xl">
+            {title}
+          </h1>
           {description ? (
             <p className="mt-3 max-w-2xl text-ink-muted">{description}</p>
           ) : null}
-          <p className="mt-4 text-sm text-ink-muted">{filtered.length} titles</p>
+          <p className="mt-4 text-sm text-ink-muted">
+            {filtered.length} titles
+          </p>
         </Container>
       </div>
       <Container className="grid gap-10 pt-10 lg:grid-cols-[240px_1fr]">
         <aside className="h-fit rounded-2xl border border-line bg-white/70 p-5">
-          <h2 className="text-xs uppercase tracking-[0.2em] text-ink-muted">Filter</h2>
+          <h2 className="text-xs uppercase tracking-[0.2em] text-ink-muted">
+            Filter
+          </h2>
           {!hideCategoryFilter ? (
             <Field label="Category">
-              <select value={category} onChange={(e) => setCategory(e.target.value)} className="select">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="select"
+              >
                 <option value="all">All categories</option>
                 {categories.map((c) => (
                   <option key={c.slug} value={c.slug}>
@@ -72,7 +88,11 @@ export function CatalogView({
             </Field>
           ) : null}
           <Field label="Author">
-            <select value={author} onChange={(e) => setAuthor(e.target.value)} className="select">
+            <select
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              className="select "
+            >
               <option value="all">All authors</option>
               {authors
                 .filter((a) => authorIds.includes(a.id))
@@ -84,7 +104,11 @@ export function CatalogView({
             </select>
           </Field>
           <Field label="Language">
-            <select value={language} onChange={(e) => setLanguage(e.target.value)} className="select">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="select"
+            >
               <option value="all">Urdu & English</option>
               <option value="Urdu">Urdu</option>
               <option value="English">English</option>
@@ -113,7 +137,9 @@ export function CatalogView({
         </aside>
         <div>
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-ink-muted">Showing {filtered.length} of {books.length}</p>
+            <p className="text-sm text-ink-muted">
+              Showing {filtered.length} of {books.length}
+            </p>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortValue)}
@@ -134,7 +160,13 @@ export function CatalogView({
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="mt-5 block text-sm">
       <span className="mb-1.5 block text-ink">{label}</span>

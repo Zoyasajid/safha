@@ -20,7 +20,7 @@ export function BookSection({
   books: Book[];
 }) {
   return (
-    <section className="py-16 sm:py-20">
+    <section className="md:py-10  py-20">
       <Container>
         <Reveal>
           <SectionHeading
@@ -33,7 +33,10 @@ export function BookSection({
         <BookGrid books={books} />
         {href ? (
           <div className="mt-8 text-center sm:hidden">
-            <Link href={href} className="text-sm font-medium text-ink underline decoration-gold underline-offset-4">
+            <Link
+              href={href}
+              className="text-sm font-medium text-ink underline decoration-gold underline-offset-4"
+            >
               View all
             </Link>
           </div>

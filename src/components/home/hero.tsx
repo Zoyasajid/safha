@@ -22,12 +22,12 @@ export function Hero() {
             Books, chosen with care.
           </h1>
           <p className="mt-3 font-urdu text-2xl text-ink-muted" dir="rtl">
-            صفحہ — کراچی کی جدید کتب خانہ
+            صفحہ — کراچی کا جدید کتب خانہ
           </p>
           <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-muted sm:text-lg">
-            Safha is a premium online bookshop for readers in Karachi and across Pakistan.
-            Authentic Urdu and English editions, same-day city delivery, and cash on delivery
-            when you want it.
+            Safha is a premium online bookshop for readers in Karachi and across
+            Pakistan. Authentic Urdu and English editions, same-day city
+            delivery, and cash on delivery when you want it.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/categories" className="btn-primary">
@@ -61,12 +61,20 @@ export function Hero() {
           <div className="absolute -left-6 top-8 hidden h-40 w-28 -rotate-12 rounded-md bg-[#3B2418] shadow-xl sm:block" />
           <div className="absolute -right-4 bottom-10 hidden h-44 w-32 rotate-6 rounded-md bg-[#1F3328] shadow-xl sm:block" />
           <div className="relative rounded-2xl border border-line bg-white/80 p-8 shadow-[0_30px_60px_-30px_rgba(44,36,22,0.45)]">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-gold">This week on the table</p>
-            <p className="mt-4 font-serif text-3xl text-ink">Peer-e-Kamil, Atomic Habits, Raja Gidh.</p>
-            <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-              The titles Karachi is actually reading — packed in Clifton, delivered to your door.
+            <p className="text-[11px] uppercase tracking-[0.28em] text-gold">
+              This week on the table
             </p>
-            <Link href="/deals" className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink hover:text-gold">
+            <p className="mt-4 font-serif text-3xl text-ink">
+              Peer-e-Kamil, Atomic Habits, Raja Gidh.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+              The titles Karachi is actually reading — packed in Clifton,
+              delivered to your door.
+            </p>
+            <Link
+              href="/deals"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink hover:text-gold"
+            >
               See current deals <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

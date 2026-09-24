@@ -23,18 +23,24 @@ async function isAuthed(request: NextRequest) {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(
+    "x-admin-route",
+    pathname.startsWith("/admin") ? "1" : "0",
+  );
   const authed = await isAuthed(request);
   const isLogin = pathname === "/admin/login";
   const isLoginApi = pathname === "/api/admin/auth/login";
   const isLogoutApi = pathname === "/api/admin/auth/logout";
 
-  if (isLoginApi || isLogoutApi) return NextResponse.next();
+  if (isLoginApi || isLogoutApi)
+    return NextResponse.next({ request: { headers: requestHeaders } });
 
   if (isLogin) {
     if (authed) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
-    return NextResponse.next();
+    return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
   if (!authed) {
@@ -46,7 +52,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

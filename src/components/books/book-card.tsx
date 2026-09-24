@@ -48,16 +48,17 @@ export function BookCard({ book }: { book: Book }) {
           onClick={() => toggleWishlist(book.id)}
           className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-cream/95 text-ink shadow-sm transition hover:scale-105"
         >
-          <Heart
-            className={`h-4 w-4 ${saved ? "fill-gold text-gold" : ""}`}
-          />
+          <Heart className={`h-4 w-4 ${saved ? "fill-gold text-gold" : ""}`} />
         </button>
       </div>
       <div className="mt-4 flex flex-1 flex-col">
         <p className="text-[11px] uppercase tracking-[0.16em] text-ink-muted">
           {getAuthorName(book.authorId)}
         </p>
-        <Link href={`/books/${book.slug}`} className="mt-1 font-serif text-lg leading-snug text-ink hover:text-gold">
+        <Link
+          href={`/books/${book.slug}`}
+          className="mt-1 font-serif text-lg leading-snug text-ink hover:text-gold"
+        >
           {book.title}
         </Link>
         <div className="mt-2">

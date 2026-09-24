@@ -24,6 +24,8 @@ export const books: Book[] = [
     bestseller: true,
     coverTone: "#3B2418",
     accent: "#C4A35A",
+    coverImage:
+      "https://myonlinebookshop.pk/cdn/shop/products/IMG-20230413-WA0130_960x.jpg?v=1681405751",
     description:
       "A modern Urdu classic following Imama Hashim and Salar Sikandar — a story of faith, redemption, and the quiet turning of a life. One of the most requested titles in Karachi’s book circles.",
   },
@@ -50,6 +52,8 @@ export const books: Book[] = [
     bestseller: true,
     coverTone: "#1F3328",
     accent: "#D4C4A8",
+    coverImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNv0tQbmgiCZDu60GYLXuaNBiqvh0BZsyT1CObPA5-sQkJ7J2uAsyL31NC&s=10",
     description:
       "Haya’s journey from innocence to self-knowledge, set against art, family, and the moral questions of a changing world. A lush, unforgettable Urdu novel.",
   },
@@ -74,6 +78,8 @@ export const books: Book[] = [
     newArrival: true,
     coverTone: "#243044",
     accent: "#C4A35A",
+    coverImage:
+      "https://duabookpalace.com/cdn/shop/products/dua-book-palace-online-aabe-hayat-38354173264104.jpg?v=1758016716",
     description:
       "The much-loved sequel that continues Salar and Imama’s story with new characters, new trials, and the same searching heart.",
   },
@@ -100,6 +106,8 @@ export const books: Book[] = [
     bestseller: true,
     coverTone: "#2A1C16",
     accent: "#E8D5B5",
+    coverImage:
+      "https://www.linkshop.pk/image/cache/catalog/books/namal-premium-2-part-edition-250x250w.jpg",
     description:
       "A sweeping Urdu saga of justice, family, and a mind that refuses to look away. Namal is a collector’s staple for serious Urdu readers.",
   },
@@ -123,6 +131,8 @@ export const books: Book[] = [
     format: "Paperback",
     coverTone: "#2F3A2C",
     accent: "#C4A35A",
+    coverImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8lQUBK_eVLXXsKf_xr-Sr2-Jzruiq3xLrZEjT8XbBjkaJeN9Tut8fAIeT&s=10",
     description:
       "A powerful story of a young woman, a sacred book, and the courage required to live by what one believes.",
   },
@@ -149,6 +159,8 @@ export const books: Book[] = [
     bestseller: true,
     coverTone: "#1C2420",
     accent: "#B08D57",
+    coverImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQja6AAO4TCu_h_lqz0_-uL6vXkONL83fGZXXVL5lPcaDNEK0P9F2vOhuQc&s=10",
     description:
       "Bano Qudsia’s masterpiece on lawful and unlawful love, told with psychological depth and spiritual gravity. Essential Urdu literature.",
   },
@@ -172,34 +184,37 @@ export const books: Book[] = [
     format: "Paperback",
     coverTone: "#3A2A22",
     accent: "#D4C4A8",
+    coverImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGRLcWF3kFbo-U6X0AqabtX-rZQj_z03ScmZZeNjNIm8Ef1UUj6EU2l4Y&s=10",
     description:
       "A quieter, searching novel of inner weather — memory, faith, and the cost of remaining true to oneself.",
   },
-  {
-    id: "zavia",
-    slug: "zavia",
-    title: "Zavia",
-    titleUrdu: "زاویہ",
-    authorId: "ashfaq-ahmed",
-    price: 850,
-    rating: 4.8,
-    reviewCount: 430,
-    stock: 20,
-    language: "Urdu",
-    categorySlugs: ["urdu", "self-help"],
-    isbn: "9789693512001",
-    publisher: "Sang-e-Meel",
-    pages: 280,
-    edition: "Volume I",
-    year: 1990,
-    format: "Paperback",
-    featured: true,
-    bestseller: true,
-    coverTone: "#4A3424",
-    accent: "#E8C97A",
-    description:
-      "Conversations with a wise friend. Ashfaq Ahmed’s Zavia remains the book Pakistanis gift when they want to say: live more gently, think more deeply.",
-  },
+  // {
+  //   id: "zavia",
+  //   slug: "zavia",
+  //   title: "Zavia",
+  //   titleUrdu: "زاویہ",
+  //   authorId: "ashfaq-ahmed",
+  //   price: 850,
+  //   rating: 4.8,
+  //   reviewCount: 430,
+  //   stock: 20,
+  //   language: "Urdu",
+  //   categorySlugs: ["urdu", "self-help"],
+  //   isbn: "9789693512001",
+  //   publisher: "Sang-e-Meel",
+  //   pages: 280,
+  //   edition: "Volume I",
+  //   year: 1990,
+  //   format: "Paperback",
+  //   featured: true,
+  //   bestseller: true,
+  //   coverTone: "#4A3424",
+  //   accent: "#E8C97A",
+  //   coverImage: "https://covers.openlibrary.org/b/isbn/9789693512001-L.jpg",
+  //   description:
+  //     "Conversations with a wise friend. Ashfaq Ahmed’s Zavia remains the book Pakistanis gift when they want to say: live more gently, think more deeply.",
+  // },
   {
     id: "gadaria",
     slug: "gadaria",
@@ -220,6 +235,8 @@ export const books: Book[] = [
     format: "Paperback",
     coverTone: "#2C2418",
     accent: "#C4A35A",
+    coverImage:
+      "https://sangemeel.shop/cdn/shop/products/gadariaa-ujlay-phool-750253-238997.jpg?v=1664281612",
     description:
       "A tender, allegorical tale of a shepherd and the people who gather around his quiet authority.",
   },
@@ -243,33 +260,35 @@ export const books: Book[] = [
     format: "Paperback",
     bestseller: true,
     coverTone: "#1E2A38",
+    coverImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeHB6jC7gBGYdo0ERNcj8YBSMpsP4ClFKRp4X2tA_80w&s",
     accent: "#C4A35A",
     description:
       "Practical lessons on discipline, learning, and character from one of Pakistan’s most followed educators — written for students and professionals alike.",
   },
-  {
-    id: "from-good-to-great",
-    slug: "from-good-to-great-mindset",
-    title: "From Good to Great Mindset",
-    authorId: "qasim-ali-shah",
-    price: 890,
-    rating: 4.4,
-    reviewCount: 141,
-    stock: 16,
-    language: "English",
-    categorySlugs: ["english", "self-help"],
-    isbn: "9789690025012",
-    publisher: "Liberty Books",
-    pages: 208,
-    edition: "Paperback",
-    year: 2020,
-    format: "Paperback",
-    newArrival: true,
-    coverTone: "#2A2018",
-    accent: "#E8D5B5",
-    description:
-      "A Karachi-ready guide to better habits, clearer thinking, and showing up for the life you say you want.",
-  },
+  // {
+  //   id: "from-good-to-great",
+  //   slug: "from-good-to-great-mindset",
+  //   title: "From Good to Great Mindset",
+  //   authorId: "qasim-ali-shah",
+  //   price: 890,
+  //   rating: 4.4,
+  //   reviewCount: 141,
+  //   stock: 16,
+  //   language: "English",
+  //   categorySlugs: ["english", "self-help"],
+  //   isbn: "9789690025012",
+  //   publisher: "Liberty Books",
+  //   pages: 208,
+  //   edition: "Paperback",
+  //   year: 2020,
+  //   format: "Paperback",
+  //   newArrival: true,
+  //   coverTone: "#2A2018",
+  //   accent: "#E8D5B5",
+  //   description:
+  //     "A Karachi-ready guide to better habits, clearer thinking, and showing up for the life you say you want.",
+  // },
   {
     id: "atomic-habits",
     slug: "atomic-habits",
@@ -554,6 +573,8 @@ export const books: Book[] = [
     featured: true,
     coverTone: "#2A2014",
     accent: "#C4A35A",
+    coverImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLgiidXydZYMoLXTJ3D3IULU5tbL6QCOw60BMmkiOim-HYHPq1KSav1YVK&s=10",
     description:
       "Iqbal’s first Urdu collection — the call of the caravan. A handsome edition for students, collectors, and anyone building a Pakistani library.",
   },
@@ -580,6 +601,8 @@ export const books: Book[] = [
     newArrival: true,
     coverTone: "#4A1C18",
     accent: "#E8D5B5",
+    coverImage:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVb81cBaI64FB3U5_UQ00LizamAtTSN0i2q-KQiJEovyeg-pESO1VGdwtW&s=10",
     description:
       "The essential Faiz — ghazals and nazms that have soundtracked hope in drawing rooms from Karachi to the world.",
   },

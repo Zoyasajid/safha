@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Noto_Nastaliq_Urdu, Outfit } from "next/font/google";
+import { headers } from "next/headers";
+import {
+  Cormorant_Garamond,
+  Noto_Nastaliq_Urdu,
+  Outfit,
+} from "next/font/google";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Providers } from "@/components/providers";
@@ -45,7 +50,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const isAdmin = (await headers()).get("x-admin-route") === "1";
   return (
     <html
       lang="en"
@@ -53,9 +59,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col bg-cream font-sans text-ink">
         <Providers>
-          <Header />
+          {!isAdmin && <Header />}
           <main className="flex-1">{children}</main>
-          <Footer />
+          {!isAdmin && <Footer />}
         </Providers>
       </body>
     </html>

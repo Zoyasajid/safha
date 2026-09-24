@@ -1,5 +1,10 @@
 import { BookSection } from "@/components/books/book-section";
-import { AuthorShowcase, CategoryShowcase, Difference, Newsletter } from "@/components/home/sections";
+import {
+  AuthorShowcase,
+  CategoryShowcase,
+  Difference,
+  Newsletter,
+} from "@/components/home/sections";
 import { Hero } from "@/components/home/hero";
 import { books } from "@/data/books";
 
@@ -12,11 +17,14 @@ export default function HomePage() {
   const english = books.filter((b) => b.language === "English");
   const novels = books.filter((b) => b.categorySlugs.includes("novels"));
   const selfHelp = books.filter((b) => b.categorySlugs.includes("self-help"));
-  const recommended = [...books].sort((a, b) => b.rating - a.rating).slice(0, 8);
+  const recommended = [...books]
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 8);
 
   return (
     <>
       <Hero />
+      <CategoryShowcase />
       <BookSection
         eyebrow="On the table"
         title="Featured books"
@@ -24,6 +32,7 @@ export default function HomePage() {
         href="/categories"
         books={featured}
       />
+
       <BookSection
         eyebrow="Karachi is reading"
         title="Best sellers"
@@ -43,7 +52,7 @@ export default function HomePage() {
         href="/deals"
         books={deals.slice(0, 8)}
       />
-      <CategoryShowcase />
+      {/* <CategoryShowcase /> */}
       <AuthorShowcase />
       <BookSection
         eyebrow="اردو"
@@ -58,7 +67,12 @@ export default function HomePage() {
         href="/english"
         books={english.slice(0, 8)}
       />
-      <BookSection eyebrow="Stories" title="Novels" href="/novels" books={novels.slice(0, 8)} />
+      <BookSection
+        eyebrow="Stories"
+        title="Novels"
+        href="/novels"
+        books={novels.slice(0, 8)}
+      />
       <BookSection
         eyebrow="Habits & mind"
         title="Self-help books"
