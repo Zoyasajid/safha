@@ -94,6 +94,8 @@ export type User = {
 
 export type PaymentMethod = "cod" | "online";
 
+export type OnlinePaymentMethod = "jazzcash" | "easypaisa" | "card";
+
 export type Order = {
   id: string;
   createdAt: string;
@@ -104,6 +106,7 @@ export type Order = {
   total: number;
   coupon?: string;
   paymentMethod: PaymentMethod;
+  onlinePaymentMethod?: OnlinePaymentMethod;
   status: "Processing" | "Packed" | "Shipped" | "Delivered";
   address: Address;
 };

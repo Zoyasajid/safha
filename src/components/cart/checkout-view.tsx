@@ -4,9 +4,14 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { useStore } from "@/context/store-context";
-import { applyCoupon, formatPKR, getBookById, shippingForCity } from "@/lib/books";
+import {
+  applyCoupon,
+  formatPKR,
+  getBookById,
+  shippingForCity,
+} from "@/lib/books";
 import { CITIES, KARACHI_AREAS, SITE } from "@/lib/constants";
-import type { Address, PaymentMethod } from "@/types";
+import type { Address, OnlinePaymentMethod, PaymentMethod } from "@/types";
 
 export function CheckoutView() {
   const { cart, cartSubtotal, addresses, user, placeOrder } = useStore();
@@ -14,13 +19,20 @@ export function CheckoutView() {
   const defaultAddr = addresses.find((a) => a.isDefault) ?? addresses[0];
   const [city, setCity] = useState(defaultAddr?.city ?? "Karachi");
   const [area, setArea] = useState(defaultAddr?.area ?? "Clifton");
-  const [fullName, setFullName] = useState(defaultAddr?.fullName ?? user?.name ?? "");
+  const [fullName, setFullName] = useState(
+    defaultAddr?.fullName ?? user?.name ?? "",
+  );
   const [phone, setPhone] = useState(defaultAddr?.phone ?? "");
   const [line1, setLine1] = useState(defaultAddr?.line1 ?? "");
   const [postalCode, setPostalCode] = useState(defaultAddr?.postalCode ?? "");
   const [payment, setPayment] = useState<PaymentMethod>("cod");
+  const [onlinePayment, setOnlinePayment] =
+    useState<OnlinePaymentMethod>("jazzcash");
   const [code, setCode] = useState("");
-  const [applied, setApplied] = useState<{ discount: number; label: string } | null>(null);
+  const [applied, setApplied] = useState<{
+    discount: number;
+    label: string;
+  } | null>(null);
   const [couponError, setCouponError] = useState("");
 
   const shipping = shippingForCity(city, cartSubtotal);
@@ -42,7 +54,11 @@ export function CheckoutView() {
     return (
       <Container className="py-24 text-center">
         <h1 className="font-serif text-4xl">Nothing to check out</h1>
-        <button type="button" className="btn-primary mx-auto mt-8" onClick={() => router.push("/")}>
+        <button
+          type="button"
+          className="btn-primary mx-auto mt-8"
+          onClick={() => router.push("/")}
+        >
           Return home
         </button>
       </Container>
@@ -84,6 +100,7 @@ export function CheckoutView() {
       total,
       coupon: applied?.label,
       paymentMethod: payment,
+      ...(payment === "online" ? { onlinePaymentMethod: onlinePayment } : {}),
       status: "Processing" as const,
       address,
     };
@@ -101,12 +118,27 @@ export function CheckoutView() {
         <fieldset className="rounded-2xl border border-line bg-white/70 p-6">
           <legend className="font-serif text-2xl">Delivery address</legend>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Input label="Full name" value={fullName} onChange={setFullName} required />
+            <Input
+              label="Full name"
+              value={fullName}
+              onChange={setFullName}
+              required
+            />
             <Input label="Phone" value={phone} onChange={setPhone} required />
-            <Input label="Street address" value={line1} onChange={setLine1} required className="sm:col-span-2" />
+            <Input
+              label="Street address"
+              value={line1}
+              onChange={setLine1}
+              required
+              className="sm:col-span-2"
+            />
             <label className="text-sm">
               <span className="mb-1.5 block">City</span>
-              <select className="select" value={city} onChange={(e) => setCity(e.target.value)}>
+              <select
+                className="select"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              >
                 {CITIES.map((c) => (
                   <option key={c}>{c}</option>
                 ))}
@@ -115,16 +147,29 @@ export function CheckoutView() {
             <label className="text-sm">
               <span className="mb-1.5 block">Area</span>
               {city === "Karachi" ? (
-                <select className="select" value={area} onChange={(e) => setArea(e.target.value)}>
+                <select
+                  className="select"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                >
                   {KARACHI_AREAS.map((a) => (
                     <option key={a}>{a}</option>
                   ))}
                 </select>
               ) : (
-                <input className="select" value={area} onChange={(e) => setArea(e.target.value)} required />
+                <input
+                  className="select"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  required
+                />
               )}
             </label>
-            <Input label="Postal code" value={postalCode} onChange={setPostalCode} />
+            <Input
+              label="Postal code"
+              value={postalCode}
+              onChange={setPostalCode}
+            />
           </div>
         </fieldset>
         <fieldset className="rounded-2xl border border-line bg-white/70 p-6">
@@ -139,7 +184,9 @@ export function CheckoutView() {
             />
             <span>
               <span className="block font-medium">Cash on Delivery</span>
-              <span className="text-sm text-ink-muted">Pay in PKR when the parcel arrives. Available nationwide.</span>
+              <span className="text-sm text-ink-muted">
+                Pay in PKR when the parcel arrives. Available nationwide.
+              </span>
             </span>
           </label>
           <label className="mt-3 flex items-start gap-3 rounded-xl border border-line p-4">
@@ -153,10 +200,35 @@ export function CheckoutView() {
             <span>
               <span className="block font-medium">Online payment</span>
               <span className="text-sm text-ink-muted">
-                JazzCash, EasyPaisa, Visa, and Mastercard. (Demo checkout — no charge is taken.)
+                JazzCash, EasyPaisa, Visa, and Mastercard. (Demo checkout — no
+                charge is taken.)
               </span>
             </span>
           </label>
+          {payment === "online" ? (
+            <div className="mt-4 rounded-xl border border-gold/50 bg-cream p-4">
+              <label className="text-sm">
+                <span className="mb-1.5 block font-medium">
+                  Choose online payment option
+                </span>
+                <select
+                  className="select"
+                  value={onlinePayment}
+                  onChange={(e) =>
+                    setOnlinePayment(e.target.value as OnlinePaymentMethod)
+                  }
+                >
+                  <option value="jazzcash">JazzCash</option>
+                  <option value="easypaisa">EasyPaisa</option>
+                  <option value="card">Visa / Mastercard</option>
+                </select>
+              </label>
+              <p className="mt-3 text-xs leading-relaxed text-ink-muted">
+                Place your order first. Our team will message you on WhatsApp
+                with payment details and confirm your payment.
+              </p>
+            </div>
+          ) : null}
         </fieldset>
         <button type="submit" className="btn-primary">
           Place order · {formatPKR(total)}
@@ -183,12 +255,20 @@ export function CheckoutView() {
             placeholder="Coupon code"
             className="select"
           />
-          <button type="button" className="btn-ghost !px-4" onClick={onApplyCoupon}>
+          <button
+            type="button"
+            className="btn-ghost !px-4"
+            onClick={onApplyCoupon}
+          >
             Apply
           </button>
         </div>
-        <p className="mt-2 text-xs text-ink-muted">Try SAFHA10, KARACHI15, or WELCOME200.</p>
-        {couponError ? <p className="mt-2 text-xs text-red-700">{couponError}</p> : null}
+        <p className="mt-2 text-xs text-ink-muted">
+          Try SAFHA10, KARACHI15, or WELCOME200.
+        </p>
+        {couponError ? (
+          <p className="mt-2 text-xs text-red-700">{couponError}</p>
+        ) : null}
         {applied ? (
           <p className="mt-2 text-xs text-emerald-800">
             {applied.label} applied (−{formatPKR(applied.discount)})
@@ -196,8 +276,13 @@ export function CheckoutView() {
         ) : null}
         <dl className="mt-4 space-y-2 text-sm">
           <Row label="Subtotal" value={formatPKR(cartSubtotal)} />
-          <Row label="Shipping" value={shipping === 0 ? "Free" : formatPKR(shipping)} />
-          {discount ? <Row label="Discount" value={`−${formatPKR(discount)}`} /> : null}
+          <Row
+            label="Shipping"
+            value={shipping === 0 ? "Free" : formatPKR(shipping)}
+          />
+          {discount ? (
+            <Row label="Discount" value={`−${formatPKR(discount)}`} />
+          ) : null}
           <Row label="Total" value={formatPKR(total)} strong />
         </dl>
       </aside>
@@ -205,9 +290,19 @@ export function CheckoutView() {
   );
 }
 
-function Row({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
+function Row({
+  label,
+  value,
+  strong,
+}: {
+  label: string;
+  value: string;
+  strong?: boolean;
+}) {
   return (
-    <div className={`flex justify-between ${strong ? "border-t border-line pt-3 text-base font-medium" : ""}`}>
+    <div
+      className={`flex justify-between ${strong ? "border-t border-line pt-3 text-base font-medium" : ""}`}
+    >
       <dt>{label}</dt>
       <dd>{value}</dd>
     </div>
