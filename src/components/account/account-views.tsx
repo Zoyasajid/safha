@@ -219,9 +219,16 @@ export function OrderDetail({ id }: { id: string }) {
             <br />
             {order.address.line1}
             <br />
-            {order.address.area}, {order.address.city}
+            {order.address.area ? `${order.address.area}, ` : ""}
+            {order.address.city}
             <br />
             {order.address.phone}
+            {order.address.emergencyPhone ? (
+              <>
+                <br />
+                Emergency: {order.address.emergencyPhone}
+              </>
+            ) : null}
           </p>
         </div>
       </div>

@@ -79,6 +79,7 @@ export type Address = {
   label: string;
   fullName: string;
   phone: string;
+  emergencyPhone?: string;
   line1: string;
   area: string;
   city: string;
@@ -107,6 +108,7 @@ export type Order = {
   coupon?: string;
   paymentMethod: PaymentMethod;
   onlinePaymentMethod?: OnlinePaymentMethod;
+  customerEmail?: string;
   status: "Processing" | "Packed" | "Shipped" | "Delivered";
   address: Address;
 };

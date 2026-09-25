@@ -4,10 +4,10 @@ export const SITE = {
   tagline: "A modern bookshop for Karachi",
   description:
     "Safha is a premium online bookstore in Karachi, Pakistan — authentic Urdu and English books, fast local delivery, cash on delivery, and a curated collection.",
-  email: "hello@safha.pk",
+  email: "safhastore0@gmail.com",
   phone: "+92 312 0258090",
   whatsapp: "+92 312 0258090",
-  address: "Shahrah e faisal Karachi, Pakistan",
+  address: "Shahrah-e-Faisal, Karachi, Pakistan",
   hours: "Monday–Saturday, 10am–7pm",
   karachiDelivery: "Same-day & next-day in Karachi on orders before 2pm",
   pakistanDelivery: "2–5 working days nationwide via reliable courier",

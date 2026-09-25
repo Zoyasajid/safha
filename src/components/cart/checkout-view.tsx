@@ -10,21 +10,19 @@ import {
   getBookById,
   shippingForCity,
 } from "@/lib/books";
-import { CITIES, KARACHI_AREAS, SITE } from "@/lib/constants";
+import { CITIES, SITE } from "@/lib/constants";
 import type { Address, OnlinePaymentMethod, PaymentMethod } from "@/types";
 
 export function CheckoutView() {
-  const { cart, cartSubtotal, addresses, user, placeOrder } = useStore();
+  const { cart, cartSubtotal, user, placeOrder } = useStore();
   const router = useRouter();
-  const defaultAddr = addresses.find((a) => a.isDefault) ?? addresses[0];
-  const [city, setCity] = useState(defaultAddr?.city ?? "Karachi");
-  const [area, setArea] = useState(defaultAddr?.area ?? "Clifton");
-  const [fullName, setFullName] = useState(
-    defaultAddr?.fullName ?? user?.name ?? "",
-  );
-  const [phone, setPhone] = useState(defaultAddr?.phone ?? "");
-  const [line1, setLine1] = useState(defaultAddr?.line1 ?? "");
-  const [postalCode, setPostalCode] = useState(defaultAddr?.postalCode ?? "");
+  const [city, setCity] = useState("Karachi");
+  const [fullName, setFullName] = useState(user?.name ?? "");
+  const [phone, setPhone] = useState("");
+  const [emergencyPhone, setEmergencyPhone] = useState("");
+  const [email, setEmail] = useState(user?.email ?? "");
+  const [line1, setLine1] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [payment, setPayment] = useState<PaymentMethod>("cod");
   const [onlinePayment, setOnlinePayment] =
     useState<OnlinePaymentMethod>("jazzcash");
@@ -34,6 +32,7 @@ export function CheckoutView() {
     label: string;
   } | null>(null);
   const [couponError, setCouponError] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const shipping = shippingForCity(city, cartSubtotal);
   const discount = applied?.discount ?? 0;
@@ -65,6 +64,20 @@ export function CheckoutView() {
     );
   }
 
+  function updateField(
+    field: string,
+    setValue: (value: string) => void,
+    value: string,
+  ) {
+    setValue(value);
+    setErrors((current) => {
+      if (!current[field]) return current;
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
+  }
+
   function onApplyCoupon() {
     const result = applyCoupon(code, cartSubtotal);
     if ("error" in result) {
@@ -76,15 +89,38 @@ export function CheckoutView() {
     setApplied({ discount: result.discount, label: result.coupon.code });
   }
 
-  function onPlace(e: React.FormEvent) {
+  async function onPlace(e: React.FormEvent) {
     e.preventDefault();
+    const nextErrors: Record<string, string> = {};
+    if (!/^[A-Za-z ]+$/.test(fullName.trim()) || fullName.trim().length < 2) {
+      nextErrors.fullName = "Enter your name using alphabets only.";
+    }
+    if (!/^03\d{9}$/.test(phone)) {
+      nextErrors.phone = "Enter an 11-digit phone number.";
+    }
+    if (emergencyPhone && !/^03\d{9}$/.test(emergencyPhone)) {
+      nextErrors.emergencyPhone = "Enter an 11-digit phone number.";
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      nextErrors.email = "Enter a valid email address.";
+    }
+    if (line1.trim().length < 5) {
+      nextErrors.line1 = "Enter your complete address.";
+    }
+    if (!/^\d{5}$/.test(postalCode)) {
+      nextErrors.postalCode = "Enter a 5-digit postal code.";
+    }
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length) return;
+
     const address: Address = {
       id: `addr-${Date.now()}`,
       label: "Checkout",
       fullName,
       phone,
+      ...(emergencyPhone ? { emergencyPhone } : {}),
       line1,
-      area,
+      area: "",
       city,
       province: city === "Karachi" ? "Sindh" : "Pakistan",
       postalCode,
@@ -101,19 +137,33 @@ export function CheckoutView() {
       coupon: applied?.label,
       paymentMethod: payment,
       ...(payment === "online" ? { onlinePaymentMethod: onlinePayment } : {}),
+      customerEmail: email,
       status: "Processing" as const,
       address,
     };
     placeOrder(order);
+    await fetch("/api/orders/confirmation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customerEmail: email,
+        customerName: fullName,
+        orderId: order.id,
+        total: order.total,
+        paymentMethod: order.paymentMethod,
+      }),
+    }).catch(() => undefined);
     router.push(`/account/orders/${order.id}`);
   }
 
   return (
     <Container className="grid gap-10 py-12 lg:grid-cols-[1fr_360px]">
-      <form onSubmit={onPlace} className="space-y-8">
+      <form onSubmit={onPlace} noValidate className="space-y-8">
         <div>
           <h1 className="font-serif text-4xl">Checkout</h1>
-          <p className="mt-2 text-sm text-ink-muted">{SITE.karachiDelivery}</p>
+          <p className="mt-2 text-sm text-ink-muted">
+            Ships from Shahrah-e-Faisal, Karachi. {SITE.karachiDelivery}
+          </p>
         </div>
         <fieldset className="rounded-2xl border border-line bg-white/70 p-6">
           <legend className="font-serif text-2xl">Delivery address</legend>
@@ -121,16 +171,48 @@ export function CheckoutView() {
             <Input
               label="Full name"
               value={fullName}
-              onChange={setFullName}
+              onChange={(value) => updateField("fullName", setFullName, value)}
               required
+              minLength={2}
+              pattern="[A-Za-z ]+"
+              title="Name can contain alphabets and spaces only"
+              error={errors.fullName}
             />
-            <Input label="Phone" value={phone} onChange={setPhone} required />
             <Input
-              label="Street address"
-              value={line1}
-              onChange={setLine1}
+              label="Phone"
+              value={phone}
+              onChange={(value) => updateField("phone", setPhone, value)}
               required
+              pattern="03\d{9}"
+              title="Enter an 11-digit Pakistani mobile number, for example 03001234567"
+              error={errors.phone}
+            />
+            <Input
+              label="Emergency phone (optional)"
+              value={emergencyPhone}
+              onChange={(value) =>
+                updateField("emergencyPhone", setEmergencyPhone, value)
+              }
+              pattern="03\d{9}"
+              title="Enter an 11-digit Pakistani mobile number, for example 03001234567"
+              error={errors.emergencyPhone}
+            />
+            <Input
+              label="Email for order confirmation"
+              value={email}
+              onChange={(value) => updateField("email", setEmail, value)}
+              required
+              type="email"
+              error={errors.email}
+            />
+            <Input
+              label="Full address"
+              value={line1}
+              onChange={(value) => updateField("line1", setLine1, value)}
+              required
+              minLength={5}
               className="sm:col-span-2"
+              error={errors.line1}
             />
             <label className="text-sm">
               <span className="mb-1.5 block">City</span>
@@ -144,31 +226,16 @@ export function CheckoutView() {
                 ))}
               </select>
             </label>
-            <label className="text-sm">
-              <span className="mb-1.5 block">Area</span>
-              {city === "Karachi" ? (
-                <select
-                  className="select"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                >
-                  {KARACHI_AREAS.map((a) => (
-                    <option key={a}>{a}</option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  className="select"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                  required
-                />
-              )}
-            </label>
             <Input
               label="Postal code"
               value={postalCode}
-              onChange={setPostalCode}
+              onChange={(value) =>
+                updateField("postalCode", setPostalCode, value)
+              }
+              required
+              pattern="\d{5}"
+              title="Enter a 5-digit postal code"
+              error={errors.postalCode}
             />
           </div>
         </fieldset>
@@ -263,9 +330,9 @@ export function CheckoutView() {
             Apply
           </button>
         </div>
-        <p className="mt-2 text-xs text-ink-muted">
+        {/* <p className="mt-2 text-xs text-ink-muted">
           Try SAFHA10, KARACHI15, or WELCOME200.
-        </p>
+        </p> */}
         {couponError ? (
           <p className="mt-2 text-xs text-red-700">{couponError}</p>
         ) : null}
@@ -315,22 +382,37 @@ function Input({
   onChange,
   required,
   className = "",
+  type = "text",
+  minLength,
+  pattern,
+  title,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   required?: boolean;
   className?: string;
+  type?: string;
+  minLength?: number;
+  pattern?: string;
+  title?: string;
+  error?: string;
 }) {
   return (
     <label className={`text-sm ${className}`}>
       <span className="mb-1.5 block">{label}</span>
       <input
-        className="select"
+        className={`select ${error ? "border-red-500" : ""}`}
         value={value}
+        type={type}
         required={required}
+        minLength={minLength}
+        pattern={pattern}
+        title={title}
         onChange={(e) => onChange(e.target.value)}
       />
+      {error ? <p className="mt-1 text-xs text-red-600">{error}</p> : null}
     </label>
   );
 }
