@@ -7,9 +7,15 @@ export type CategorySlug =
   | "self-help"
   | "fiction"
   | "poetry"
+  | "spiritual"
+  | "personal-development"
+  | "psychology"
   | "history"
   | "business"
+  | "romance"
   | "islamic"
+  | "mystery"
+  | "thriller"
   | "biography";
 
 export type Author = {
@@ -42,7 +48,7 @@ export type Book = {
   pages: number;
   edition: string;
   year: number;
-  format: "Paperback" | "Hardcover";
+  format: "Paperback" | "Hardcover" | "2-Volume Set";
   description: string;
   featured?: boolean;
   bestseller?: boolean;
