@@ -24,7 +24,7 @@ const pillars = [
   {
     icon: Truck,
     title: "Fast Delivery in Karachi",
-    body: "Same-day and next-day across Clifton, DHA, Gulshan, and beyond. Nationwide in 2–5 days.",
+    body: "Same-day and next-day around Shahrah-e-Faisal, DHA, Gulshan, and beyond. Nationwide in 2–5 days.",
   },
   {
     icon: ShieldCheck,
@@ -39,7 +39,7 @@ const pillars = [
   {
     icon: Headphones,
     title: "Customer Support",
-    body: "WhatsApp or call the Clifton desk. Real people, not a ticket void.",
+    body: "WhatsApp or call the Shahrah-e-Faisal desk. Real people, not a ticket void.",
   },
 ];
 
@@ -186,7 +186,8 @@ export function Newsletter() {
               The Safha letter
             </p>
             <h2 className="mt-3 max-w-xl font-serif text-3xl sm:text-4xl">
-              New arrivals, quiet recommendations, Clifton window notes.
+              New arrivals, quiet recommendations, Shahrah-e-Faisal window
+              notes.
             </h2>
             <form
               className="mt-8 flex max-w-lg flex-col gap-3 sm:flex-row"

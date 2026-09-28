@@ -49,12 +49,12 @@ type Persisted = {
 
 const defaultAddresses: Address[] = [
   {
-    id: "addr-clifton",
+    id: "addr-shahrah-e-faisal",
     label: "Home",
     fullName: "Reader at Safha",
     phone: "0300 8240190",
     line1: "House 14, Street 7",
-    area: "Clifton Block 5",
+    area: "Shahrah-e-Faisal",
     city: "Karachi",
     province: "Sindh",
     postalCode: "75600",
@@ -79,7 +79,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         setCart(parsed.cart ?? []);
         setWishlist(parsed.wishlist ?? []);
         setUser(parsed.user ?? null);
-        setAddresses(parsed.addresses?.length ? parsed.addresses : defaultAddresses);
+        setAddresses(
+          parsed.addresses?.length ? parsed.addresses : defaultAddresses,
+        );
         setOrders(parsed.orders ?? []);
       }
     } catch {
@@ -187,18 +189,21 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     notify("Signed out.");
   }, [notify]);
 
-  const saveAddress = useCallback((address: Address) => {
-    setAddresses((prev) => {
-      const rest = address.isDefault
-        ? prev.map((a) => ({ ...a, isDefault: false }))
-        : prev;
-      const exists = rest.some((a) => a.id === address.id);
-      return exists
-        ? rest.map((a) => (a.id === address.id ? address : a))
-        : [...rest, address];
-    });
-    notify("Address saved.");
-  }, [notify]);
+  const saveAddress = useCallback(
+    (address: Address) => {
+      setAddresses((prev) => {
+        const rest = address.isDefault
+          ? prev.map((a) => ({ ...a, isDefault: false }))
+          : prev;
+        const exists = rest.some((a) => a.id === address.id);
+        return exists
+          ? rest.map((a) => (a.id === address.id ? address : a))
+          : [...rest, address];
+      });
+      notify("Address saved.");
+    },
+    [notify],
+  );
 
   const removeAddress = useCallback((id: string) => {
     setAddresses((prev) => prev.filter((a) => a.id !== id));
@@ -266,7 +271,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     ],
   );
 
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+  return (
+    <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
+  );
 }
 
 export function useStore() {

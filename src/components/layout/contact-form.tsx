@@ -59,8 +59,8 @@ export function ContactForm() {
         </p>
         <h1 className="mt-2 font-serif text-4xl sm:text-5xl">Contact</h1>
         <p className="mt-4 max-w-md text-ink-muted">
-          The Clifton desk answers WhatsApp faster than email. Walk-ins welcome
-          during shop hours.
+          The Shahrah-e-Faisal desk answers WhatsApp faster than email. Walk-ins
+          welcome during shop hours.
         </p>
         <dl className="mt-8 space-y-4 text-sm">
           <div>

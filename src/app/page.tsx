@@ -83,7 +83,7 @@ export default function HomePage() {
       <BookSection
         eyebrow="A quiet suggestion"
         title="You may also like"
-        description="Recommended from this week’s Clifton notes."
+        description="Recommended from this week’s  notes."
         books={recommended}
       />
       <Newsletter />

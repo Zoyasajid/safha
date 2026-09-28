@@ -17,14 +17,10 @@ export default function ShippingPage() {
           Safha ships from Shahrah-e-Faisal, Karachi. All prices are in
           Pakistani Rupees (PKR).
         </p>
-        <h2 className="font-serif text-2xl text-ink">Karachi</h2>
+        <h2 className="font-serif text-2xl text-ink">Delivery charges</h2>
         <p>
-          {SITE.karachiDelivery}. Shipping is Rs. 150, or free on orders of Rs.
-          3,000 and above.
-        </p>
-        <h2 className="font-serif text-2xl text-ink">Rest of Pakistan</h2>
-        <p>
-          {SITE.pakistanDelivery}. Flat Rs. 350 below Rs. 3,000; free above.
+          Flat Rs. 200 across Pakistan, or free on orders of Rs. 3,000 and
+          above. {SITE.karachiDelivery}. {SITE.pakistanDelivery}.
         </p>
         <h2 className="font-serif text-2xl text-ink">Cash on Delivery</h2>
         <p>

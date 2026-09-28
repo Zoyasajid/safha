@@ -11,7 +11,12 @@ import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { useStore } from "@/context/store-context";
 import { getReviewsForBook } from "@/data/reviews";
-import { discountPercent, formatPKR, getAuthorName, relatedBooks } from "@/lib/books";
+import {
+  discountPercent,
+  formatPKR,
+  getAuthorName,
+  relatedBooks,
+} from "@/lib/books";
 import { SITE } from "@/lib/constants";
 import type { Book } from "@/types";
 import Link from "next/link";
@@ -38,24 +43,35 @@ export function ProductView({ book }: { book: Book }) {
           <p className="text-[11px] uppercase tracking-[0.22em] text-ink-muted">
             {book.language} · {book.format}
           </p>
-          <h1 className="mt-2 font-serif text-4xl text-ink sm:text-5xl">{book.title}</h1>
+          <h1 className="mt-2 font-serif text-4xl text-ink sm:text-5xl">
+            {book.title}
+          </h1>
           {book.titleUrdu ? (
             <p className="mt-2 font-urdu text-2xl text-ink-muted" dir="rtl">
               {book.titleUrdu}
             </p>
           ) : null}
           {author ? (
-            <Link href={`/authors/${author.slug}`} className="mt-3 inline-block text-sm text-gold">
+            <Link
+              href={`/authors/${author.slug}`}
+              className="mt-3 inline-block text-sm text-gold"
+            >
               {author.name}
             </Link>
           ) : (
             <p className="mt-3 text-sm">{getAuthorName(book.authorId)}</p>
           )}
           <div className="mt-4">
-            <RatingStars rating={book.rating} count={book.reviewCount} size="md" />
+            <RatingStars
+              rating={book.rating}
+              count={book.reviewCount}
+              size="md"
+            />
           </div>
           <div className="mt-5 flex items-baseline gap-3">
-            <span className="text-3xl font-medium text-ink">{formatPKR(book.price)}</span>
+            <span className="text-3xl font-medium text-ink">
+              {formatPKR(book.price)}
+            </span>
             {book.originalPrice ? (
               <>
                 <span className="text-lg text-ink-muted line-through">
@@ -67,14 +83,18 @@ export function ProductView({ book }: { book: Book }) {
               </>
             ) : null}
           </div>
-          <p className={`mt-3 text-sm ${book.stock > 5 ? "text-emerald-800" : book.stock > 0 ? "text-amber-800" : "text-red-800"}`}>
+          <p
+            className={`mt-3 text-sm ${book.stock > 5 ? "text-emerald-800" : book.stock > 0 ? "text-amber-800" : "text-red-800"}`}
+          >
             {book.stock > 5
-              ? "In stock — ready to ship from Clifton"
+              ? "In stock"
               : book.stock > 0
                 ? `Only ${book.stock} left`
                 : "Currently unavailable"}
           </p>
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-ink-muted">{book.description}</p>
+          <p className="mt-5 max-w-xl text-sm leading-relaxed text-ink-muted">
+            {book.description}
+          </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <div className="flex items-center rounded-full border border-line bg-white">
@@ -122,7 +142,9 @@ export function ProductView({ book }: { book: Book }) {
               onClick={() => toggleWishlist(book.id)}
               className="inline-flex items-center gap-2 text-sm"
             >
-              <Heart className={`h-4 w-4 ${saved ? "fill-gold text-gold" : ""}`} />
+              <Heart
+                className={`h-4 w-4 ${saved ? "fill-gold text-gold" : ""}`}
+              />
               Wishlist
             </button>
           </div>
@@ -130,11 +152,13 @@ export function ProductView({ book }: { book: Book }) {
           <div className="mt-8 grid gap-3 rounded-2xl border border-line bg-white/70 p-5 text-sm">
             <p className="flex items-start gap-3">
               <Truck className="mt-0.5 h-4 w-4 text-gold" />
-              {SITE.karachiDelivery}. {SITE.pakistanDelivery}.
+              Rs. 200 delivery nationwide, free on orders of Rs. 3,000+.{" "}
+              {SITE.karachiDelivery}.
             </p>
             <p className="flex items-start gap-3">
               <ShieldCheck className="mt-0.5 h-4 w-4 text-gold" />
-              Cash on delivery across Pakistan. Easy returns within 7 days if the copy is unused.
+              Cash on delivery across Pakistan. Easy returns within 7 days if
+              the copy is unused.
             </p>
           </div>
         </Reveal>
@@ -143,7 +167,9 @@ export function ProductView({ book }: { book: Book }) {
       <Container className="grid gap-8 pb-8 lg:grid-cols-2">
         <div className="rounded-2xl border border-line bg-white/70 p-6">
           <h2 className="font-serif text-2xl">Description</h2>
-          <p className="mt-3 text-sm leading-relaxed text-ink-muted">{book.description}</p>
+          <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+            {book.description}
+          </p>
         </div>
         <div className="rounded-2xl border border-line bg-white/70 p-6">
           <h2 className="font-serif text-2xl">Book details</h2>
@@ -171,7 +197,10 @@ export function ProductView({ book }: { book: Book }) {
           <h2 className="font-serif text-2xl">Reviews</h2>
           <div className="mt-6 space-y-6">
             {reviews.map((r) => (
-              <article key={r.id} className="border-t border-line pt-5 first:border-0 first:pt-0">
+              <article
+                key={r.id}
+                className="border-t border-line pt-5 first:border-0 first:pt-0"
+              >
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-medium">{r.author}</p>
                   <p className="text-xs text-ink-muted">
@@ -190,7 +219,11 @@ export function ProductView({ book }: { book: Book }) {
       </Container>
 
       <BookSection title="Related books" books={related} />
-      <BookSection eyebrow="For you" title="You may also like" books={also.length ? also : related} />
+      <BookSection
+        eyebrow="For you"
+        title="You may also like"
+        books={also.length ? also : related}
+      />
     </div>
   );
 }

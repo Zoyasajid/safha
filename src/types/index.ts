@@ -108,6 +108,7 @@ export type Order = {
   coupon?: string;
   paymentMethod: PaymentMethod;
   onlinePaymentMethod?: OnlinePaymentMethod;
+  paymentStatus?: "pending" | "unpaid" | "paid";
   customerEmail?: string;
   status: "Processing" | "Packed" | "Shipped" | "Delivered";
   address: Address;

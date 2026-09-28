@@ -19,7 +19,9 @@ export function CartView() {
     return (
       <Container className="py-24 text-center">
         <h1 className="font-serif text-4xl">Your basket is empty</h1>
-        <p className="mt-3 text-ink-muted">The Clifton table is waiting.</p>
+        <p className="mt-3 text-ink-muted">
+          The Shahrah-e-Faisal table is waiting.
+        </p>
         <Link href="/categories" className="btn-primary mx-auto mt-8 w-fit">
           Continue browsing
         </Link>
@@ -44,25 +46,36 @@ export function CartView() {
                   <BookCover book={book} />
                 </Link>
                 <div className="flex flex-1 flex-col">
-                  <Link href={`/books/${book.slug}`} className="font-serif text-xl">
+                  <Link
+                    href={`/books/${book.slug}`}
+                    className="font-serif text-xl"
+                  >
                     {book.title}
                   </Link>
-                  <p className="text-sm text-ink-muted">{getAuthorName(book.authorId)}</p>
+                  <p className="text-sm text-ink-muted">
+                    {getAuthorName(book.authorId)}
+                  </p>
                   <p className="mt-2 font-medium">{formatPKR(book.price)}</p>
                   <div className="mt-auto flex items-center justify-between pt-3">
                     <div className="flex items-center rounded-full border border-line">
                       <button
                         type="button"
                         className="px-3 py-2"
-                        onClick={() => updateQty(item.bookId, item.quantity - 1)}
+                        onClick={() =>
+                          updateQty(item.bookId, item.quantity - 1)
+                        }
                       >
                         <Minus className="h-4 w-4" />
                       </button>
-                      <span className="w-6 text-center text-sm">{item.quantity}</span>
+                      <span className="w-6 text-center text-sm">
+                        {item.quantity}
+                      </span>
                       <button
                         type="button"
                         className="px-3 py-2"
-                        onClick={() => updateQty(item.bookId, item.quantity + 1)}
+                        onClick={() =>
+                          updateQty(item.bookId, item.quantity + 1)
+                        }
                       >
                         <Plus className="h-4 w-4" />
                       </button>
@@ -90,7 +103,7 @@ export function CartView() {
             <dd>{formatPKR(cartSubtotal)}</dd>
           </div>
           <div className="flex justify-between">
-            <dt>Karachi shipping</dt>
+            <dt>shipping</dt>
             <dd>{shipping === 0 ? "Free" : formatPKR(shipping)}</dd>
           </div>
           <div className="flex justify-between border-t border-line pt-3 text-base font-medium">
@@ -99,9 +112,14 @@ export function CartView() {
           </div>
         </dl>
         <p className="mt-3 text-xs text-ink-muted">
-          Free Karachi delivery on orders of Rs. 3,000+. Apply coupons at checkout.
+          Free Karachi delivery on orders of Rs. 3,000+. Apply coupons at
+          checkout.
         </p>
-        <button type="button" className="btn-primary mt-6 w-full" onClick={() => router.push("/checkout")}>
+        <button
+          type="button"
+          className="btn-primary mt-6 w-full"
+          onClick={() => router.push("/checkout")}
+        >
           Checkout
         </button>
       </aside>

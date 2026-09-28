@@ -33,6 +33,8 @@ export function CheckoutView() {
   } | null>(null);
   const [couponError, setCouponError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const shipping = shippingForCity(city, cartSubtotal);
   const discount = applied?.discount ?? 0;
@@ -126,34 +128,69 @@ export function CheckoutView() {
       postalCode,
       isDefault: false,
     };
-    const order = {
-      id: `SF-${Date.now().toString().slice(-8)}`,
-      createdAt: new Date().toISOString(),
-      items: cart,
-      subtotal: cartSubtotal,
-      shipping,
-      discount,
-      total,
-      coupon: applied?.label,
-      paymentMethod: payment,
-      ...(payment === "online" ? { onlinePaymentMethod: onlinePayment } : {}),
-      customerEmail: email,
-      status: "Processing" as const,
-      address,
-    };
-    placeOrder(order);
-    await fetch("/api/orders/confirmation", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cart,
+          address,
+          customerEmail: email,
+          paymentMethod: payment,
+          ...(payment === "online"
+            ? { onlinePaymentMethod: onlinePayment }
+            : {}),
+          couponCode: applied?.label,
+        }),
+      });
+      const result = (await response.json()) as {
+        order?: {
+          id: string;
+          createdAt: string;
+          subtotal: number;
+          shipping: number;
+          discount: number;
+          total: number;
+          coupon?: string;
+          paymentStatus: "pending" | "unpaid" | "paid";
+        };
+        error?: string;
+      };
+      if (!response.ok || !result.order) {
+        throw new Error(result.error ?? "Unable to save your order.");
+      }
+
+      const order = {
+        ...result.order,
+        items: cart,
+        paymentMethod: payment,
+        ...(payment === "online" ? { onlinePaymentMethod: onlinePayment } : {}),
         customerEmail: email,
-        customerName: fullName,
-        orderId: order.id,
-        total: order.total,
-        paymentMethod: order.paymentMethod,
-      }),
-    }).catch(() => undefined);
-    router.push(`/account/orders/${order.id}`);
+        status: "Processing" as const,
+        address,
+      };
+      placeOrder(order);
+      await fetch("/api/orders/confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerEmail: email,
+          customerName: fullName,
+          orderId: order.id,
+          total: order.total,
+          paymentMethod: order.paymentMethod,
+        }),
+      }).catch(() => undefined);
+      router.push(`/account/orders/${order.id}`);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Unable to save your order.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -225,6 +262,9 @@ export function CheckoutView() {
                   <option key={c}>{c}</option>
                 ))}
               </select>
+              <span className="mt-1.5 block text-xs text-ink-muted">
+                Delivery is Rs. 200 nationwide, free on orders of Rs. 3,000+.
+              </span>
             </label>
             <Input
               label="Postal code"
@@ -297,8 +337,13 @@ export function CheckoutView() {
             </div>
           ) : null}
         </fieldset>
-        <button type="submit" className="btn-primary">
-          Place order · {formatPKR(total)}
+        {submitError ? (
+          <p role="alert" className="text-sm text-red-700">
+            {submitError}
+          </p>
+        ) : null}
+        <button type="submit" className="btn-primary" disabled={submitting}>
+          {submitting ? "Saving order…" : `Place order · ${formatPKR(total)}`}
         </button>
       </form>
       <aside className="h-fit rounded-2xl border border-line bg-white p-6">

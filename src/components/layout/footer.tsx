@@ -105,7 +105,11 @@ export function Footer() {
             Cash on Delivery · JazzCash · EasyPaisa · Visa · Mastercard
           </p>
           <div className="mt-4 flex gap-3 text-sm">
-            <a href="https://instagram.com" className="hover:text-gold">
+            <a
+              href="https://www.instagram.com/safha_bookstore/"
+              target="blank"
+              className="hover:text-gold"
+            >
               Instagram
             </a>
             <a
@@ -115,7 +119,11 @@ export function Footer() {
             >
               Facebook
             </a>
-            <a href="https://wa.me/923008240190" className="hover:text-gold">
+            <a
+              href="https://wa.me/923120258090"
+              target="blank"
+              className="hover:text-gold"
+            >
               WhatsApp
             </a>
           </div>

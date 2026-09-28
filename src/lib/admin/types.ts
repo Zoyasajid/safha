@@ -14,7 +14,12 @@ export type OrderStatus =
   | "Delivered"
   | "Cancelled"
   | "Returned";
-export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+export type PaymentStatus =
+  | "pending"
+  | "unpaid"
+  | "paid"
+  | "failed"
+  | "refunded";
 export type ReviewStatus = "pending" | "approved" | "hidden";
 export type DiscountType = "percent" | "fixed";
 
@@ -118,6 +123,8 @@ export type AdminOrderItem = {
 export type AdminOrder = {
   id: string;
   customerId: string;
+  customerName?: string;
+  customerEmail?: string;
   createdAt: string;
   items: AdminOrderItem[];
   subtotal: number;
@@ -126,6 +133,7 @@ export type AdminOrder = {
   total: number;
   coupon?: string;
   paymentMethod: "cod" | "online";
+  onlinePaymentMethod?: string;
   paymentStatus: PaymentStatus;
   status: OrderStatus;
   address: {
@@ -206,7 +214,9 @@ export type AdminDB = {
   settings: StoreSettings;
 };
 
-export function deriveStockStatus(p: Pick<AdminProduct, "stock" | "lowStockThreshold">): StockStatus {
+export function deriveStockStatus(
+  p: Pick<AdminProduct, "stock" | "lowStockThreshold">,
+): StockStatus {
   if (p.stock <= 0) return "out_of_stock";
   if (p.stock <= p.lowStockThreshold) return "low_stock";
   return "in_stock";

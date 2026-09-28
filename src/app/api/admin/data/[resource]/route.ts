@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { guard, jsonError, slugify } from "@/lib/admin/api";
 import { readDb, updateDb } from "@/lib/admin/store";
+import {
+  isOrderStatus,
+  readFirestoreOrders,
+  updateFirestoreOrderStatus,
+} from "@/lib/admin/firestore-orders";
 import type {
   AdminAuthor,
   AdminCategory,
@@ -36,6 +41,9 @@ export async function GET(_: Request, ctx: Ctx) {
   const { resource } = await ctx.params;
   if (!collections.includes(resource))
     return jsonError("Resource not found.", 404);
+  if (resource === "orders") {
+    return NextResponse.json({ orders: await readFirestoreOrders() });
+  }
   const db = await readDb();
   return NextResponse.json({ [resource]: db[resource as Resource] });
 }
@@ -110,6 +118,18 @@ export async function PATCH(request: Request, ctx: Ctx) {
   const body = (await request.json()) as Record<string, unknown> & {
     id?: string;
   };
+  if (resource === "orders") {
+    if (!body.id || !isOrderStatus(body.status)) {
+      return jsonError("A valid order id and status are required.");
+    }
+    try {
+      const item = await updateFirestoreOrderStatus(body.id, body.status);
+      if (!item) return jsonError("Order not found.", 404);
+      return NextResponse.json({ item });
+    } catch {
+      return jsonError("Unable to update order status.", 500);
+    }
+  }
   const updated = await updateDb((db) => {
     if (resource === "settings") {
       db.settings = { ...db.settings, ...body } as StoreSettings;

@@ -68,8 +68,8 @@ export function Hero() {
               Peer-e-Kamil, Atomic Habits, Raja Gidh.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-              The titles Karachi is actually reading — packed in Clifton,
-              delivered to your door.
+              The titles Karachi is actually reading — packed on
+              Shahrah-e-Faisal, delivered to your door.
             </p>
             <Link
               href="/deals"

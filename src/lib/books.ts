@@ -8,7 +8,9 @@ export function formatPKR(value: number) {
 
 export function discountPercent(book: Book) {
   if (!book.originalPrice || book.originalPrice <= book.price) return 0;
-  return Math.round(((book.originalPrice - book.price) / book.originalPrice) * 100);
+  return Math.round(
+    ((book.originalPrice - book.price) / book.originalPrice) * 100,
+  );
 }
 
 export function getBookBySlug(slug: string) {
@@ -35,7 +37,8 @@ export function relatedBooks(book: Book, limit = 8) {
       score:
         b.authorId === book.authorId
           ? 5
-          : b.categorySlugs.filter((c) => book.categorySlugs.includes(c)).length,
+          : b.categorySlugs.filter((c) => book.categorySlugs.includes(c))
+              .length,
     }))
     .sort((a, c) => c.score - a.score)
     .slice(0, limit)
@@ -61,7 +64,9 @@ export function applyCoupon(
   code: string,
   subtotal: number,
 ): { coupon: Coupon; discount: number } | { error: string } {
-  const coupon = coupons.find((c) => c.code.toUpperCase() === code.trim().toUpperCase());
+  const coupon = coupons.find(
+    (c) => c.code.toUpperCase() === code.trim().toUpperCase(),
+  );
   if (!coupon) return { error: "This code isn’t valid." };
   if (coupon.minSubtotal && subtotal < coupon.minSubtotal) {
     return {
@@ -77,8 +82,7 @@ export function applyCoupon(
 
 export function shippingForCity(city: string, subtotal: number) {
   if (subtotal >= 3000) return 0;
-  if (city.toLowerCase() === "karachi") return 150;
-  return 350;
+  return 200;
 }
 
 export const sortOptions = [
@@ -106,6 +110,9 @@ export function sortBooks(list: Book[], sort: SortValue) {
     case "title":
       return copy.sort((a, b) => a.title.localeCompare(b.title));
     default:
-      return copy.sort((a, b) => Number(b.featured) - Number(a.featured) || b.rating - a.rating);
+      return copy.sort(
+        (a, b) =>
+          Number(b.featured) - Number(a.featured) || b.rating - a.rating,
+      );
   }
 }

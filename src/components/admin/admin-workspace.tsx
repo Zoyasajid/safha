@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import {
   Archive,
   ArrowUpRight,
@@ -357,10 +357,10 @@ function Dashboard({ db }: { db: AdminDB }) {
                       {order.id}
                     </td>
                     <td className="py-4">
-                      {
+                      {order.customerName ||
+                        order.address.fullName ||
                         db.customers.find((c) => c.id === order.customerId)
-                          ?.name
-                      }
+                          ?.name}
                     </td>
                     <td className="py-4">
                       <Status value={order.status} />
@@ -885,6 +885,7 @@ function Orders({
   customers: AdminCustomer[];
   mutate: (resource: string, method: string, body: unknown) => Promise<void>;
 }) {
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const statuses = [
     "Pending",
     "Confirmed",
@@ -908,54 +909,206 @@ function Orders({
               <th className="px-5 py-3">Order</th>
               <th className="px-5 py-3">Customer</th>
               <th className="px-5 py-3">Date</th>
-              <th className="px-5 py-3">Items</th>
+              <th className="px-5 py-3">Books</th>
               <th className="px-5 py-3">Total</th>
               <th className="px-5 py-3">Payment</th>
               <th className="px-5 py-3">Order status</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
-              <tr key={order.id} className="border-t border-slate-100">
-                <td className="px-5 py-4 font-semibold text-[#163b59]">
-                  {order.id}
-                </td>
-                <td className="px-5 py-4">
-                  {customers.find((c) => c.id === order.customerId)?.name}
-                </td>
-                <td className="px-5 py-4 text-slate-500">
-                  {date(order.createdAt)}
-                </td>
-                <td className="px-5 py-4 text-slate-500">
-                  {order.items.reduce((s, i) => s + i.quantity, 0)}
-                </td>
-                <td className="px-5 py-4 font-semibold">
-                  {money(order.total)}
-                </td>
-                <td className="px-5 py-4">
-                  <Status value={order.paymentStatus} />
-                </td>
-                <td className="px-5 py-4">
-                  <select
-                    value={order.status}
-                    onChange={(e) =>
-                      mutate("orders", "PATCH", {
-                        id: order.id,
-                        status: e.target.value,
-                      })
-                    }
-                    className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs font-semibold"
-                  >
-                    <option>{order.status}</option>
-                    {statuses
-                      .filter((s) => s !== order.status)
-                      .map((status) => (
-                        <option key={status}>{status}</option>
-                      ))}
-                  </select>
+            {orders.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={7}
+                  className="px-5 py-10 text-center text-slate-500"
+                >
+                  No orders have been placed yet.
                 </td>
               </tr>
-            ))}
+            ) : (
+              orders.map((order) => (
+                <Fragment key={order.id}>
+                  <tr className="border-t border-slate-100">
+                    <td className="px-5 py-4 font-semibold text-[#163b59]">
+                      <p>{order.id}</p>
+                      <button
+                        type="button"
+                        aria-expanded={expandedOrderId === order.id}
+                        onClick={() =>
+                          setExpandedOrderId((current) =>
+                            current === order.id ? null : order.id,
+                          )
+                        }
+                        className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-[#163b59]"
+                      >
+                        <Eye size={14} />
+                        {expandedOrderId === order.id
+                          ? "Hide details"
+                          : "View details"}
+                      </button>
+                    </td>
+                    <td className="px-5 py-4">
+                      <p className="font-medium">
+                        {order.customerName ||
+                          order.address.fullName ||
+                          customers.find((c) => c.id === order.customerId)
+                            ?.name ||
+                          "Customer"}
+                      </p>
+                      {order.customerEmail ? (
+                        <p className="mt-1 text-xs text-slate-500">
+                          {order.customerEmail}
+                        </p>
+                      ) : null}
+                    </td>
+                    <td className="px-5 py-4 text-slate-500">
+                      {date(order.createdAt)}
+                    </td>
+                    <td className="px-5 py-4 text-slate-600">
+                      <ul className="space-y-1">
+                        {order.items.map((item) => (
+                          <li key={item.productId}>
+                            {item.title} × {item.quantity}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="px-5 py-4 font-semibold">
+                      {money(order.total)}
+                    </td>
+                    <td className="px-5 py-4">
+                      <p className="mb-1 text-xs text-slate-500">
+                        {order.paymentMethod === "cod"
+                          ? "Cash on delivery"
+                          : order.onlinePaymentMethod || "Online payment"}
+                      </p>
+                      <Status value={order.paymentStatus} />
+                    </td>
+                    <td className="px-5 py-4">
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          mutate("orders", "PATCH", {
+                            id: order.id,
+                            status: e.target.value,
+                          })
+                        }
+                        className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs font-semibold"
+                      >
+                        <option>{order.status}</option>
+                        {statuses
+                          .filter((s) => s !== order.status)
+                          .map((status) => (
+                            <option key={status}>{status}</option>
+                          ))}
+                      </select>
+                    </td>
+                  </tr>
+                  {expandedOrderId === order.id ? (
+                    <tr className="border-t border-slate-100 bg-slate-50/70">
+                      <td colSpan={7} className="px-5 py-5">
+                        <div className="grid gap-6 md:grid-cols-3">
+                          <section>
+                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Items
+                            </h3>
+                            <ul className="mt-3 space-y-2 text-sm">
+                              {order.items.map((item) => (
+                                <li
+                                  key={item.productId}
+                                  className="flex justify-between gap-4"
+                                >
+                                  <span>
+                                    {item.title} × {item.quantity}
+                                    <span className="block text-xs text-slate-500">
+                                      {money(item.price)} each
+                                    </span>
+                                  </span>
+                                  <span className="font-medium">
+                                    {money(item.price * item.quantity)}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </section>
+                          <section>
+                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Customer & delivery
+                            </h3>
+                            <div className="mt-3 space-y-1 text-sm">
+                              <p className="font-medium">
+                                {order.customerName || order.address.fullName}
+                              </p>
+                              {order.customerEmail ? (
+                                <p>{order.customerEmail}</p>
+                              ) : null}
+                              <p>{order.address.phone}</p>
+                              <p>
+                                {order.address.line1}
+                                {order.address.area
+                                  ? `, ${order.address.area}`
+                                  : ""}
+                              </p>
+                              <p>
+                                {order.address.city}, {order.address.province}{" "}
+                                {order.address.postalCode}
+                              </p>
+                            </div>
+                          </section>
+                          <section>
+                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Payment & total
+                            </h3>
+                            <dl className="mt-3 space-y-2 text-sm">
+                              <div className="flex justify-between gap-4">
+                                <dt className="text-slate-500">Method</dt>
+                                <dd>
+                                  {order.paymentMethod === "cod"
+                                    ? "Cash on delivery"
+                                    : order.onlinePaymentMethod ||
+                                      "Online payment"}
+                                </dd>
+                              </div>
+                              <div className="flex justify-between gap-4">
+                                <dt className="text-slate-500">
+                                  Payment status
+                                </dt>
+                                <dd>{order.paymentStatus}</dd>
+                              </div>
+                              <div className="flex justify-between gap-4">
+                                <dt className="text-slate-500">Subtotal</dt>
+                                <dd>{money(order.subtotal)}</dd>
+                              </div>
+                              <div className="flex justify-between gap-4">
+                                <dt className="text-slate-500">Shipping</dt>
+                                <dd>
+                                  {order.shipping === 0
+                                    ? "Free"
+                                    : money(order.shipping)}
+                                </dd>
+                              </div>
+                              {order.discount > 0 ? (
+                                <div className="flex justify-between gap-4">
+                                  <dt className="text-slate-500">
+                                    Discount
+                                    {order.coupon ? ` (${order.coupon})` : ""}
+                                  </dt>
+                                  <dd>−{money(order.discount)}</dd>
+                                </div>
+                              ) : null}
+                              <div className="flex justify-between gap-4 border-t border-slate-200 pt-2 font-semibold">
+                                <dt>Total</dt>
+                                <dd>{money(order.total)}</dd>
+                              </div>
+                            </dl>
+                          </section>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : null}
+                </Fragment>
+              ))
+            )}
           </tbody>
         </table>
       </div>

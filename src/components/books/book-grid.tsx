@@ -8,7 +8,8 @@ export function BookGrid({ books }: { books: Book[] }) {
   if (!books.length) {
     return (
       <p className="rounded-2xl border border-line bg-white/60 px-6 py-16 text-center text-ink-muted">
-        No titles match these filters. Try a wider search — our shelves in Clifton are deeper than they look.
+        No titles match these filters. Try a wider search — our Shahrah-e-Faisal
+        shelves are deeper than they look.
       </p>
     );
   }

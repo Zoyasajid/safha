@@ -12,7 +12,7 @@ export default function NovelsPage() {
     <CatalogView
       eyebrow="Stories"
       title="Novels"
-      description="Long-form fiction for weekends in Clifton and commutes to Saddar."
+      description="Long-form fiction for weekends around Shahrah-e-Faisal and commutes to Saddar."
       books={booksByCategory("novels")}
       hideCategoryFilter
     />

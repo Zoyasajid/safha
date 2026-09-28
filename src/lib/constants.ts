@@ -26,7 +26,7 @@ export const NAV_LINKS = [
 ];
 
 export const KARACHI_AREAS = [
-  "Clifton",
+  "Shahrah-e-Faisal",
   "DHA",
   "PECHS",
   "Gulshan-e-Iqbal",
