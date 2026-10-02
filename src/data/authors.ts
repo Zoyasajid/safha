@@ -90,15 +90,7 @@ export const authors: Author[] = [
     bookCount: 1,
     coverTone: "#243024",
   },
-  {
-    id: "yuval-noah-harari",
-    slug: "yuval-noah-harari",
-    name: "Yuval Noah Harari",
-    bio: "Historian and thinker known for sweeping narratives of humankind, science, and the future.",
-    location: "Israel",
-    bookCount: 1,
-    coverTone: "#2A2420",
-  },
+
   {
     id: "mohsin-hamid",
     slug: "mohsin-hamid",

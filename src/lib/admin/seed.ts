@@ -67,6 +67,7 @@ export function buildSeed(): AdminDB {
     nameUrdu: a.nameUrdu,
     bio: a.bio,
     location: a.location,
+    image: a.image,
     coverTone: a.coverTone,
     status: "active",
     createdAt: `2023-11-${String((i % 27) + 1).padStart(2, "0")}T10:00:00.000Z`,

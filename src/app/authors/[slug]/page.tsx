@@ -1,25 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CatalogView } from "@/components/catalog/catalog-view";
-import { authors } from "@/data/authors";
 import { books } from "@/data/books";
+import { readFirestoreAuthorBySlug } from "@/lib/admin/firestore-authors";
+
+export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  return authors.map((a) => ({ slug: a.slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const author = authors.find((a) => a.slug === slug);
-  return { title: author?.name ?? "Author" };
+  const author = await readFirestoreAuthorBySlug(slug);
+  return { title: author?.status === "active" ? author.name : "Author" };
 }
 
 export default async function AuthorPage({ params }: Props) {
   const { slug } = await params;
-  const author = authors.find((a) => a.slug === slug);
-  if (!author) notFound();
+  const author = await readFirestoreAuthorBySlug(slug);
+  if (!author || author.status !== "active") notFound();
   const list = books.filter((b) => b.authorId === author.id);
   return (
     <CatalogView

@@ -2,12 +2,18 @@ import { NextResponse } from "next/server";
 import { guard, jsonError, slugify } from "@/lib/admin/api";
 import { readDb, updateDb } from "@/lib/admin/store";
 import {
+  createFirestoreAuthor,
+  deleteFirestoreAuthor,
+  readFirestoreAuthors,
+  updateFirestoreAuthor,
+} from "@/lib/admin/firestore-authors";
+import { isFirebaseAdminConfigured } from "@/lib/firebase-admin";
+import {
   isOrderStatus,
   readFirestoreOrders,
   updateFirestoreOrderStatus,
 } from "@/lib/admin/firestore-orders";
 import type {
-  AdminAuthor,
   AdminCategory,
   AdminCoupon,
   AdminCustomer,
@@ -44,6 +50,9 @@ export async function GET(_: Request, ctx: Ctx) {
   if (resource === "orders") {
     return NextResponse.json({ orders: await readFirestoreOrders() });
   }
+  if (resource === "authors") {
+    return NextResponse.json({ authors: await readFirestoreAuthors() });
+  }
   const db = await readDb();
   return NextResponse.json({ [resource]: db[resource as Resource] });
 }
@@ -54,6 +63,35 @@ export async function POST(request: Request, ctx: Ctx) {
   const { resource } = await ctx.params;
   const body = (await request.json()) as Record<string, unknown>;
   const now = new Date().toISOString();
+  if (resource === "authors") {
+    if (typeof body.name !== "string" || !body.name.trim()) {
+      return jsonError("A valid author name is required.");
+    }
+    if (!isFirebaseAdminConfigured()) {
+      return jsonError("Firebase Admin credentials are not configured.", 503);
+    }
+    try {
+      const author = await createFirestoreAuthor({
+        slug:
+          typeof body.slug === "string" && body.slug.trim()
+            ? slugify(body.slug)
+            : slugify(body.name),
+        name: body.name.trim(),
+        nameUrdu:
+          typeof body.nameUrdu === "string" ? body.nameUrdu.trim() : undefined,
+        bio: String(body.bio ?? ""),
+        location: String(body.location ?? "Pakistan"),
+        image: typeof body.image === "string" ? body.image : undefined,
+        coverTone:
+          typeof body.coverTone === "string" ? body.coverTone : "#315264",
+        status: body.status === "inactive" ? "inactive" : "active",
+        createdAt: now,
+      });
+      return NextResponse.json({ item: author }, { status: 201 });
+    } catch {
+      return jsonError("Unable to save author to Firebase.", 500);
+    }
+  }
   const created = await updateDb((db) => {
     if (resource === "categories") {
       if (typeof body.name !== "string" || !body.name.trim()) return null;
@@ -68,22 +106,6 @@ export async function POST(request: Request, ctx: Ctx) {
         createdAt: now,
       };
       db.categories.unshift(item);
-      return item;
-    }
-    if (resource === "authors") {
-      if (typeof body.name !== "string" || !body.name.trim()) return null;
-      const item: AdminAuthor = {
-        id: `author-${Date.now()}`,
-        slug: slugify(body.name),
-        name: body.name.trim(),
-        bio: String(body.bio ?? ""),
-        location: String(body.location ?? "Pakistan"),
-        image: typeof body.image === "string" ? body.image : undefined,
-        coverTone: "#315264",
-        status: "active",
-        createdAt: now,
-      };
-      db.authors.unshift(item);
       return item;
     }
     if (resource === "coupons") {
@@ -130,6 +152,35 @@ export async function PATCH(request: Request, ctx: Ctx) {
       return jsonError("Unable to update order status.", 500);
     }
   }
+  if (resource === "authors") {
+    if (!body.id || typeof body.name !== "string" || !body.name.trim()) {
+      return jsonError("A valid author id and name are required.");
+    }
+    if (!isFirebaseAdminConfigured()) {
+      return jsonError("Firebase Admin credentials are not configured.", 503);
+    }
+    try {
+      const updated = await updateFirestoreAuthor(body.id, {
+        slug:
+          typeof body.slug === "string" && body.slug.trim()
+            ? slugify(body.slug)
+            : slugify(body.name),
+        name: body.name.trim(),
+        nameUrdu:
+          typeof body.nameUrdu === "string" ? body.nameUrdu.trim() : undefined,
+        bio: String(body.bio ?? ""),
+        location: String(body.location ?? ""),
+        image: typeof body.image === "string" ? body.image : undefined,
+        coverTone:
+          typeof body.coverTone === "string" ? body.coverTone : "#315264",
+        status: body.status === "inactive" ? "inactive" : "active",
+      });
+      if (!updated) return jsonError("Author not found.", 404);
+      return NextResponse.json({ item: updated });
+    } catch {
+      return jsonError("Unable to update author in Firebase.", 500);
+    }
+  }
   const updated = await updateDb((db) => {
     if (resource === "settings") {
       db.settings = { ...db.settings, ...body } as StoreSettings;
@@ -155,6 +206,18 @@ export async function DELETE(request: Request, ctx: Ctx) {
   const { id } = (await request.json()) as { id?: string };
   if (!id || resource === "settings")
     return jsonError("Record id is required.");
+  if (resource === "authors") {
+    if (!isFirebaseAdminConfigured()) {
+      return jsonError("Firebase Admin credentials are not configured.", 503);
+    }
+    try {
+      const removed = await deleteFirestoreAuthor(id);
+      if (!removed) return jsonError("Author not found.", 404);
+      return NextResponse.json({ ok: true });
+    } catch {
+      return jsonError("Unable to delete author from Firebase.", 500);
+    }
+  }
   const removed = await updateDb((db) => {
     const key = resource as Exclude<Resource, "settings">;
     const list = db[key] as Array<{ id: string }>;
