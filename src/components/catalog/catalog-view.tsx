@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { BookGrid } from "@/components/books/book-grid";
+import { useAuthors } from "@/components/providers";
 import { Container } from "@/components/ui/container";
-import { authors } from "@/data/authors";
 import { categories } from "@/data/categories";
 import { sortBooks, type SortValue, sortOptions } from "@/lib/books";
 import type { Book, CategorySlug } from "@/types";
@@ -21,6 +21,7 @@ export function CatalogView({
   books: Book[];
   hideCategoryFilter?: boolean;
 }) {
+  const authors = useAuthors();
   const [category, setCategory] = useState<string>("all");
   const [author, setAuthor] = useState("all");
   const [language, setLanguage] = useState("all");

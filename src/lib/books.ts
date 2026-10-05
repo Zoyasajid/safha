@@ -1,5 +1,5 @@
-import { authors } from "@/data/authors";
 import { books, coupons } from "@/data/books";
+import type { AdminAuthor } from "@/lib/admin/types";
 import type { Book, CategorySlug, Coupon } from "@/types";
 
 export function formatPKR(value: number) {
@@ -21,8 +21,8 @@ export function getBookById(id: string) {
   return books.find((b) => b.id === id);
 }
 
-export function getAuthorName(authorId: string) {
-  return authors.find((a) => a.id === authorId)?.name ?? "Unknown";
+export function getAuthorName(authorId: string, authors: AdminAuthor[]) {
+  return authors.find((author) => author.id === authorId)?.name ?? "Unknown";
 }
 
 export function booksByCategory(slug: CategorySlug) {
@@ -45,11 +45,11 @@ export function relatedBooks(book: Book, limit = 8) {
     .map((x) => x.b);
 }
 
-export function searchBooks(query: string) {
+export function searchBooks(query: string, authors: AdminAuthor[]) {
   const q = query.trim().toLowerCase();
   if (!q) return [];
   return books.filter((b) => {
-    const author = getAuthorName(b.authorId).toLowerCase();
+    const author = getAuthorName(b.authorId, authors).toLowerCase();
     return (
       b.title.toLowerCase().includes(q) ||
       (b.titleUrdu ?? "").includes(query) ||

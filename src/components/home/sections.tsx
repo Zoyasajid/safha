@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Reveal, Stagger, staggerItem } from "@/components/ui/reveal";
+import { useAuthors } from "@/components/providers";
 import { motion } from "framer-motion";
 import { categories } from "@/data/categories";
-import { authors } from "@/data/authors";
 
 const pillars = [
   {
@@ -115,6 +115,8 @@ export function CategoryShowcase() {
 }
 
 export function AuthorShowcase() {
+  const authors = useAuthors();
+
   return (
     <section className="py-16 sm:py-20">
       <Container>

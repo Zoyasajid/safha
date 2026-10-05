@@ -6,12 +6,14 @@ import { Heart, ShoppingBag } from "lucide-react";
 import { BookCover } from "@/components/books/book-cover";
 import { RatingStars } from "@/components/books/rating-stars";
 import { useStore } from "@/context/store-context";
+import { useAuthors } from "@/components/providers";
 import { discountPercent, formatPKR, getAuthorName } from "@/lib/books";
 import type { Book } from "@/types";
 import { staggerItem } from "@/components/ui/reveal";
 
 export function BookCard({ book }: { book: Book }) {
   const { addToCart, toggleWishlist, isWishlisted } = useStore();
+  const authors = useAuthors();
   const saved = isWishlisted(book.id);
   const off = discountPercent(book);
 
@@ -53,7 +55,7 @@ export function BookCard({ book }: { book: Book }) {
       </div>
       <div className="mt-4 flex flex-1 flex-col">
         <p className="text-[11px] uppercase tracking-[0.16em] text-ink-muted">
-          {getAuthorName(book.authorId)}
+          {getAuthorName(book.authorId, authors)}
         </p>
         <Link
           href={`/books/${book.slug}`}

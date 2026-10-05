@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import { useAuthors } from "@/components/providers";
 import { searchBooks, formatPKR, getAuthorName } from "@/lib/books";
 
 export function SearchOverlay({
@@ -14,8 +15,12 @@ export function SearchOverlay({
   onClose: () => void;
 }) {
   const [q, setQ] = useState("");
+  const authors = useAuthors();
   const router = useRouter();
-  const results = useMemo(() => searchBooks(q).slice(0, 8), [q]);
+  const results = useMemo(
+    () => searchBooks(q, authors).slice(0, 8),
+    [q, authors],
+  );
 
   useEffect(() => {
     if (!open) setQ("");
@@ -73,7 +78,9 @@ export function SearchOverlay({
             >
               <div>
                 <p className="font-medium text-ink">{book.title}</p>
-                <p className="text-xs text-ink-muted">{getAuthorName(book.authorId)}</p>
+                <p className="text-xs text-ink-muted">
+                  {getAuthorName(book.authorId, authors)}
+                </p>
               </div>
               <p className="text-sm text-ink">{formatPKR(book.price)}</p>
             </Link>

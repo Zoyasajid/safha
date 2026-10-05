@@ -58,13 +58,21 @@ export async function readFirestoreAuthorBySlug(
   return doc ? normalizeAuthor(doc.id, doc.data()) : null;
 }
 
+export async function readFirestoreAuthorById(
+  id: string,
+): Promise<AdminAuthor | null> {
+  if (!isFirebaseAdminConfigured()) return null;
+  const doc = await getFirebaseAdminDb().collection("authors").doc(id).get();
+  return doc.exists ? normalizeAuthor(doc.id, doc.data() ?? {}) : null;
+}
+
 export async function createFirestoreAuthor(
   author: Omit<AdminAuthor, "id">,
 ): Promise<AdminAuthor> {
   const collection = getFirebaseAdminDb().collection("authors");
-  const ref = collection.doc();
+  const ref = collection.doc(author.slug);
   const item = { ...author, id: ref.id };
-  await ref.set(withoutUndefined(item));
+  await ref.create(withoutUndefined(item));
   return item;
 }
 

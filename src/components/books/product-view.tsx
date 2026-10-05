@@ -9,6 +9,7 @@ import { BookSection } from "@/components/books/book-section";
 import { RatingStars } from "@/components/books/rating-stars";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
+import { useAuthors } from "@/components/providers";
 import { useStore } from "@/context/store-context";
 import { getReviewsForBook } from "@/data/reviews";
 import {
@@ -20,14 +21,14 @@ import {
 import { SITE } from "@/lib/constants";
 import type { Book } from "@/types";
 import Link from "next/link";
-import { getAuthorById } from "@/data/authors";
 
 export function ProductView({ book }: { book: Book }) {
   const { addToCart, toggleWishlist, isWishlisted } = useStore();
+  const authors = useAuthors();
   const [qty, setQty] = useState(1);
   const router = useRouter();
   const off = discountPercent(book);
-  const author = getAuthorById(book.authorId);
+  const author = authors.find((item) => item.id === book.authorId);
   const reviews = getReviewsForBook(book.id);
   const related = useMemo(() => relatedBooks(book, 4), [book]);
   const also = useMemo(() => relatedBooks(book, 8).slice(4), [book]);
@@ -59,7 +60,9 @@ export function ProductView({ book }: { book: Book }) {
               {author.name}
             </Link>
           ) : (
-            <p className="mt-3 text-sm">{getAuthorName(book.authorId)}</p>
+            <p className="mt-3 text-sm">
+              {getAuthorName(book.authorId, authors)}
+            </p>
           )}
           <div className="mt-4">
             <RatingStars

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import type { Book } from "@/types";
-import { getAuthorName } from "@/lib/books";
 
 export function BookCover({
   book,
@@ -9,7 +8,6 @@ export function BookCover({
   book: Book;
   className?: string;
 }) {
-  const author = getAuthorName(book.authorId);
   const coverImage = book.coverImage
     ? book.coverImage
     : `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`;

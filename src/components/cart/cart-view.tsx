@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { BookCover } from "@/components/books/book-cover";
+import { useAuthors } from "@/components/providers";
 import { Container } from "@/components/ui/container";
 import { useStore } from "@/context/store-context";
 import { formatPKR, getBookById, getAuthorName } from "@/lib/books";
@@ -11,6 +12,7 @@ import { shippingForCity } from "@/lib/books";
 
 export function CartView() {
   const { cart, updateQty, removeFromCart, cartSubtotal } = useStore();
+  const authors = useAuthors();
   const router = useRouter();
   const shipping = shippingForCity("Karachi", cartSubtotal);
   const total = cartSubtotal + shipping;
@@ -53,7 +55,7 @@ export function CartView() {
                     {book.title}
                   </Link>
                   <p className="text-sm text-ink-muted">
-                    {getAuthorName(book.authorId)}
+                    {getAuthorName(book.authorId, authors)}
                   </p>
                   <p className="mt-2 font-medium">{formatPKR(book.price)}</p>
                   <div className="mt-auto flex items-center justify-between pt-3">

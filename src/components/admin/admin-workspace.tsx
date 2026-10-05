@@ -111,6 +111,7 @@ export function AdminWorkspace({ section }: { section: Section }) {
         query={query}
         setQuery={setQuery}
         mutate={mutate}
+        refresh={load}
       />
     );
   if (section === "inventory")
@@ -457,6 +458,7 @@ function Products({
   query,
   setQuery,
   mutate,
+  refresh,
 }: {
   products: AdminProduct[];
   authors: AdminAuthor[];
@@ -464,11 +466,54 @@ function Products({
   query: string;
   setQuery: (v: string) => void;
   mutate: (resource: string, method: string, body: unknown) => Promise<boolean>;
+  refresh: () => Promise<void>;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
-  const visible = products.filter((p) =>
-    `${p.title} ${p.sku}`.toLowerCase().includes(query.toLowerCase()),
-  );
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [stockFilter, setStockFilter] = useState("all");
+  const [importingBooks, setImportingBooks] = useState(false);
+
+  async function importBooks() {
+    setImportingBooks(true);
+    try {
+      console.log("Importing books from src/data/books into the database...");
+      const response = await fetch("/api/admin/books/import", {
+        method: "POST",
+      });
+      console.log("Response from import API:", response);
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        alert(data.error ?? "Could not import books.");
+        return;
+      }
+
+      const data = (await response.json()) as {
+        imported: number;
+        skipped: number;
+      };
+      alert(
+        `${data.imported} books added to Firebase. ${data.skipped} already existed and were skipped.`,
+      );
+    } catch (error) {
+      console.error("Failed to import books:", error);
+      alert("Something went wrong while importing books.");
+    } finally {
+      setImportingBooks(false);
+    }
+  }
+
+  const visible = products.filter((product) => {
+    const matchesQuery = `${product.title} ${product.sku}`
+      .toLowerCase()
+      .includes(query.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.categoryIds.includes(categoryFilter);
+    const matchesStock =
+      stockFilter === "all" || deriveStockStatus(product) === stockFilter;
+
+    return matchesQuery && matchesCategory && matchesStock;
+  });
+
   async function deleteProduct(id: string) {
     if (confirm("Delete this product permanently?")) {
       await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
@@ -482,12 +527,26 @@ function Products({
         title="Products / Books"
         description={`${products.length} titles in your catalogue.`}
         action={
-          <Link
-            href="/admin/products/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#d09830] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#b78325]"
-          >
-            <Plus size={17} /> Add product
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={importBooks}
+              disabled={importingBooks}
+              className="inline-flex items-center gap-2 rounded-xl border border-[#d09830] bg-white px-4 py-2.5 text-sm font-semibold text-[#b78325] hover:bg-[#fff8ee] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <RefreshCw
+                size={17}
+                className={importingBooks ? "animate-spin" : ""}
+              />
+              {importingBooks ? "Importing..." : "Import all books"}
+            </button>
+            <Link
+              href="/admin/products/new"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#d09830] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#b78325]"
+            >
+              <Plus size={17} /> Add product
+            </Link>
+          </div>
         }
       />
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -504,17 +563,27 @@ function Products({
               className="w-full rounded-lg border border-slate-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-[#d09830]"
             />
           </div>
-          <select className="rounded-lg border border-slate-200 px-3 text-sm text-slate-600">
-            <option>All categories</option>
-            {categories.map((c) => (
-              <option key={c.id}>{c.name}</option>
+          <select
+            value={categoryFilter}
+            onChange={(event) => setCategoryFilter(event.target.value)}
+            className="rounded-lg border border-slate-200 px-3 text-sm text-slate-600"
+          >
+            <option value="all">All categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
             ))}
           </select>
-          <select className="rounded-lg border border-slate-200 px-3 text-sm text-slate-600">
-            <option>All stock statuses</option>
-            <option>In stock</option>
-            <option>Low stock</option>
-            <option>Out of stock</option>
+          <select
+            value={stockFilter}
+            onChange={(event) => setStockFilter(event.target.value)}
+            className="rounded-lg border border-slate-200 px-3 text-sm text-slate-600"
+          >
+            <option value="all">All stock statuses</option>
+            <option value="in_stock">In stock</option>
+            <option value="low_stock">Low stock</option>
+            <option value="out_of_stock">Out of stock</option>
           </select>
         </div>
         {selected.length > 0 && (

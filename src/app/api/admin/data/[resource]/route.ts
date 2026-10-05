@@ -88,7 +88,14 @@ export async function POST(request: Request, ctx: Ctx) {
         createdAt: now,
       });
       return NextResponse.json({ item: author }, { status: 201 });
-    } catch {
+    } catch (error) {
+      const firestoreError = error as { code?: number | string };
+      if (
+        firestoreError.code === 6 ||
+        firestoreError.code === "already-exists"
+      ) {
+        return jsonError("An author with this name already exists.", 409);
+      }
       return jsonError("Unable to save author to Firebase.", 500);
     }
   }
