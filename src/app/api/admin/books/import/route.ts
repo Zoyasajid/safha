@@ -21,7 +21,7 @@ function mapBookToProduct(
   const safeSlug = slugify(book.slug || book.title) || `book-${index + 1}`;
   const regularPrice =
     book.originalPrice && book.originalPrice > book.price
-      ? book.originalPrice``
+      ? book.originalPrice
       : book.price;
   const salePrice =
     book.originalPrice && book.originalPrice > book.price
